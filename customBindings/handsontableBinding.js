@@ -5,6 +5,8 @@ ko.bindingHandlers.handsontable = {
 
      $(element).handsontable({
          data: value(),
+         minSpareRows: 1,
+         dataSchema: function(){ return new Album({ title: null, description: null, cover: null, country: null }) },
             columns: [
                 {data: property("title"), width: "200"},
                 {data: property("description"), width: "200" },
