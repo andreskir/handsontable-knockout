@@ -12,7 +12,7 @@ ko.bindingHandlers.handsontable = {
             {data: property("title"), width: "200"},
             {data: property("description"), width: "200" },
             {data: property("cover"), width: "200" },
-            {data: property("country"), type: "select2", width: "200", selectorData: [{id:'AR',text:'Argentina'},{id:'BR',text:'Brasil'},{id:'CH',text:'Chile'},{id:'UY',text:'Uruguay'}] }
+            {data: property("country"), type: "multiValue", width: "200", selectorData: [{id:'AR',text:'Argentina'},{id:'BR',text:'Brasil'},{id:'CH',text:'Chile'},{id:'UY',text:'Uruguay'}] }
         ],
         removeRowPlugin: true,
         removeRowFunction: function(row){ value.remove(value()[row]); },

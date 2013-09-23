@@ -95,8 +95,9 @@ function Select2Renderer (instance, td, row, col){
       self.instance.addHookOnce('beforeKeyDown', self.beforeKeyDownHook);
     };
 
-    this.beforeKeyDownHook = function() {
+    this.beforeKeyDownHook = function(event) {
       if (self.shouldBeginEditing(event.keyCode)) {
+        event.stopImmediatePropagation();
         self.beginEditing();
       }  else if (self.shouldDeleteAndRehook(event.keyCode)){ 
         self.select2.select2("val","");
@@ -144,17 +145,20 @@ Select2Renderer.prototype.shouldRehook = function(keyCode){
 }
 
 Handsontable.Select2Renderer = function (instance, td, row, col, prop, value, cellProperties) {
-  if(!cellProperties.select2Renderer){
-    cellProperties.select2Renderer = new Select2Renderer(instance, td, row, col);
-    cellProperties.select2Renderer.createElements(cellProperties.selectorData, value);
+  var $td = $(td);
+  if(!$td.data("renderer")){
+    var renderer = new Select2Renderer(instance, td, row, col);
+    renderer.createElements(cellProperties.selectorData, value);
+    $td.data("renderer",renderer);
   }
   else
-    cellProperties.select2Renderer.setValue(value);
+    $td.data("renderer").setValue(value);
   return td;
 }
 
 Handsontable.Select2Editor = function (instance, td, row, col, prop, value, cellProperties) {
-  cellProperties.select2Renderer.addHookOnce();
+  var $td = $(td);
+  $td.data("renderer").addHookOnce();
 }
 
 Handsontable.Select2Cell = {

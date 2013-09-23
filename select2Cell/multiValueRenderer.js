@@ -9,10 +9,7 @@ MultiValueRenderer.prototype.bindMyEvents = function(){
   var self = this;
   this.select2.on("select2-open",function(){ self.isOpened = true });
   this.select2.on("select2-close",function(){
-    setTimeout(function(){ self.isOpened = false },0) //otherwise keyDown is trigged after isOpened is set to false
-  });
-  this.select2.on("change",function(){
-    setTimeout(function(){ self.renderInstance();});
+    setTimeout(function(){ self.isOpened = false },0); //otherwise keyDown is trigged after isOpened is set to false
   });
 };
 
@@ -29,15 +26,15 @@ MultiValueRenderer.prototype.shouldDeleteAndRehook = function(keyCode){
   return keyCode==46; //delete
 }
 
-
 Handsontable.MultiValueRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-  if(!cellProperties.select2Renderer){
-    cellProperties.select2Renderer = new MultiValueRenderer(instance, td, row, col);
-    cellProperties.select2Renderer.createElements(cellProperties.selectorData, value);
+  var $td = $(td);
+  if(!$td.data("renderer")){
+    var renderer = new MultiValueRenderer(instance, td, row, col);
+    renderer.createElements(cellProperties.selectorData, value);
+    $td.data("renderer",renderer);
   }
   else
-    cellProperties.select2Renderer.setValue(value);
-
+    $td.data("renderer").setValue(value);
   return td;
 };
 
