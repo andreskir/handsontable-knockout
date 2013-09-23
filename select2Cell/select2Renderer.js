@@ -148,6 +148,8 @@ Handsontable.Select2Renderer = function (instance, td, row, col, prop, value, ce
     cellProperties.select2Renderer = new Select2Renderer(instance, td, row, col);
     cellProperties.select2Renderer.createElements(cellProperties.selectorData, value);
   }
+  else
+    cellProperties.select2Renderer.setValue(value);
   return td;
 }
 

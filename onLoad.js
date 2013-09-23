@@ -9,7 +9,13 @@ function ViewModel(albums){
   this.setDateAsFirstTitle = function(){
     self.albums()[0].title(new Date());
   }
-  
+
+  this.setAllCountriesAR = function(){
+    self.albums().forEach(function(item){
+      item.country('AR');
+    });
+  }
+
   this.removeAlbum = function(index){
     self.albums.remove(self.albums()[index])
   }

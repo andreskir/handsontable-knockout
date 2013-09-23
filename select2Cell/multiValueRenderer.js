@@ -35,6 +35,9 @@ Handsontable.MultiValueRenderer = function (instance, td, row, col, prop, value,
     cellProperties.select2Renderer = new MultiValueRenderer(instance, td, row, col);
     cellProperties.select2Renderer.createElements(cellProperties.selectorData, value);
   }
+  else
+    cellProperties.select2Renderer.setValue(value);
+
   return td;
 };
 
