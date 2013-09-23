@@ -158,7 +158,11 @@ Handsontable.Select2Renderer = function (instance, td, row, col, prop, value, ce
 
 Handsontable.Select2Editor = function (instance, td, row, col, prop, value, cellProperties) {
   var $td = $(td);
-  $td.data("renderer").addHookOnce();
+  instance.addHookOnce('beforeKeyDown', $td.data("renderer").beforeKeyDownHook);
+  instance.addHookOnce('afterSelection', function(){
+    instance.removeHook('beforeKeyDown', $td.data("renderer").beforeKeyDownHook);
+  }); //to avoid bug where beforeKeyDown is triggered when it is not current cell
+  
 }
 
 Handsontable.Select2Cell = {
