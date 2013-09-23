@@ -7,6 +7,7 @@ ko.bindingHandlers.handsontable = {
         data: value(),
         minSpareRows: 1,
         dataSchema: function(){ return new Album({ title: null, description: null, cover: null, country: null }) },
+        colHeaders: colHeaders,
         columns: [
             {data: property("title"), width: "200"},
             {data: property("description"), width: "200" },
@@ -14,7 +15,8 @@ ko.bindingHandlers.handsontable = {
             {data: property("country"), type: "select2", width: "200", selectorData: [{id:'AR',text:'Argentina'},{id:'BR',text:'Brasil'},{id:'CH',text:'Chile'},{id:'UY',text:'Uruguay'}] }
         ],
         removeRowPlugin: true,
-        removeRow: function(row){ value.remove(value()[row]); }
+        removeRowFunction: function(row){ value.remove(value()[row]); },
+        isRemovable: function(row) { return !value()[row].title(); }
      });
 
  },

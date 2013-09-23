@@ -57,17 +57,17 @@
           elem.removeChild(child);
         }
         elem.className = 'htNoFrame htRemoveRow';
-        if (row > -1) {
+        if (row > -1 && row < instance.countRows()-1 && instance.getSettings().isRemovable(row)) {
           div = document.createElement('div');
           div.className = 'btn';
           div.appendChild(document.createTextNode('x'));
           elem.appendChild(div);
 
           $(div).on('mouseup', function () {
-            instance.getSettings().removeRow(row);
+            instance.getSettings().removeRowFunction(row);
             instance.render();
           });
-        }
+        }          
       };
 
       return pluginEnabled ? Array.prototype.concat.call([], newRowHeader, baseRowHeaders()) : baseRowHeaders();
