@@ -7,9 +7,22 @@ Handsontable.helper.inherit(MultiValueRenderer, Select2Renderer);
 
 MultiValueRenderer.prototype.bindMyEvents = function(){
   var self = this;
-  this.select2.on("select2-open",function(){ self.isOpened = true });
+  this.select2.on("select2-open",function(){ 
+    self.isOpened = true;
+    setTimeout(function(){
+      self.instance.view.render();      
+    },100)
+  });
   this.select2.on("select2-close",function(){
-    setTimeout(function(){ self.isOpened = false },0); //otherwise keyDown is trigged after isOpened is set to false
+    setTimeout(function(){ 
+      self.isOpened = false;
+      self.instance.view.render();
+    },100); //otherwise keyDown is trigged after isOpened is set to false
+  });
+  this.select2.on("change",function(){
+    setTimeout(function(){
+      self.instance.view.render();
+    },100);
   });
 };
 
