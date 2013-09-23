@@ -13,10 +13,13 @@
     <script src="select2Cell/select2Renderer.js"></script>
     <script src="select2Cell/multiValueRenderer.js"></script>
     <script src="customBindings/handsontableBinding.js"></script>
+    <script src="extensions/jquery.handsontable.removeRow.js"></script>
+    <link rel="stylesheet" media="screen" href="extensions/jquery.handsontable.removeRow.css">
     <script src="onLoad.js"></script>
 		<style type="text/css">
 			body {background: white; margin: 20px;}
 			h2 {margin: 20px 0;}
+      #example1 {margin-left: 50px;}
 		</style>
 	</head>
 	<body>
@@ -27,7 +30,7 @@
 		<p>This is a very powerful feature. Just remember to escape any HTML code that could be used for XSS
 		  attacks.</p>
 
-		<div id="example1" class="handsontable" data-bind="handsontable: albums"></div>
+		<div id="example1" class="handsontable" data-bind="handsontable: albums, removeRow: removeAlbum"></div>
     <input type="button" value="Set Date As First Title" data-bind="click: setDateAsFirstTitle">
     <pre id="dump" data-bind="text: ko.toJSON(albums, null, 2)"/>
 	</body>
