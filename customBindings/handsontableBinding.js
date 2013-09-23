@@ -17,10 +17,7 @@ ko.bindingHandlers.handsontable = {
 
  },
  update: function (element, valueAccessor, allBindingsAccessor) {
-     // var value = valueAccessor();
-     // $(element).handsontable("updateSettings", {
-     //     minRows: value().length,
-     // });
+     $(element).handsontable("getInstance").render();
  }
 };
 

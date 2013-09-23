@@ -6,6 +6,10 @@ function ViewModel(albums){
   var self = this;
   this.albums = ko.observableArray();
 
+  this.setDateAsFirstTitle = function(){
+    self.albums()[0].title(new Date());
+  }
+
   albums.forEach(function(album){
     self.albums.push(new Album(album))
   });
