@@ -133,7 +133,8 @@ Select2Renderer.prototype.returnPressed = function(){
 }
 
 Select2Renderer.prototype.shouldBeginEditing = function(keyCode){
-  return Handsontable.helper.isPrintableChar(keyCode);
+  return Handsontable.helper.isPrintableChar(keyCode) || 
+    keyCode === 113; //f2
 }
 
 Select2Renderer.prototype.shouldDeleteAndRehook = function(keyCode){

@@ -33,7 +33,7 @@ MultiValueRenderer.prototype.returnPressed = function(){
     this.finishEditing();
 };
 MultiValueRenderer.prototype.shouldBeginEditing = function(keyCode){
-  return Handsontable.helper.isPrintableChar(keyCode) || keyCode==8; // or backspace
+  return Select2Renderer.prototype.shouldBeginEditing.call(this, keyCode) || keyCode==8; // or backspace
 }
 MultiValueRenderer.prototype.shouldDeleteAndRehook = function(keyCode){
   return keyCode==46; //delete

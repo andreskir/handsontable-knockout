@@ -12,7 +12,8 @@ ko.bindingHandlers.handsontable = {
         removeRowFunction: function(row){ options.data.remove(options.data()[row]); },
         isRemovable: function(row) { return !options.data()[row].title(); },
         colMaxWidth: 250,
-        width: 900
+        width: 900,
+        enterBeginsEditing: false
      });
 
  },
