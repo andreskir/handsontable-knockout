@@ -1,5 +1,6 @@
 function Album(data){
   ko.mapping.fromJS(data, {}, this);
+  delete this.__ko_mapping__;
 }
 
 function ViewModel(albums){

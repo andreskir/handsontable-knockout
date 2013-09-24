@@ -9,14 +9,15 @@ ko.bindingHandlers.handsontable = {
         dataSchema: function(){ return new Album({ title: null, description: null, cover: null, country: null }) },
         colHeaders: colHeaders,
         columns: [
-            {data: property("title"), width: "200"},
-            {data: property("description"), width: "200" },
-            {data: property("cover"), width: "200" },
-            {data: property("country"), type: "multiValue", width: "200", selectorData: [{id:'AR',text:'Argentina'},{id:'BR',text:'Brasil'},{id:'CH',text:'Chile'},{id:'UY',text:'Uruguay'}] }
+            {data: property("title") },
+            {data: property("description") },
+            {data: property("cover") },
+            {data: property("country"), type: "multiValue", selectorData: [{id:'AR',text:'Argentina'},{id:'BR',text:'Brasil'},{id:'CH',text:'Chile'},{id:'UY',text:'Uruguay'}] }
         ],
         removeRowPlugin: true,
         removeRowFunction: function(row){ value.remove(value()[row]); },
-        isRemovable: function(row) { return !value()[row].title(); }
+        isRemovable: function(row) { return !value()[row].title(); },
+        colMaxWidth: 250
      });
 
  },

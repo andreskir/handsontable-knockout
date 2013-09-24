@@ -81,4 +81,5 @@
   Handsontable.PluginHooks.add('afterUpdateSettings', function () {
     init.call(this)
   });
+
 })(jQuery);
