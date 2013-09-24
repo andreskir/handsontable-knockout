@@ -144,15 +144,25 @@ Select2Renderer.prototype.shouldRehook = function(keyCode){
   return [9, 33, 34, 35, 36, 37, 38, 39, 40, 13].indexOf(keyCode) == -1; // other non printable character
 }
 
+var findSelect2Container = function(td){
+  return $(td).find(".select2Element").select2("container");
+};
+var getRendererFrom = function(td){
+  return findSelect2Container(td).data("renderer");
+}
+var saveRendererTo = function(td, renderer){
+  return findSelect2Container(td).data("renderer", renderer);
+}
+
 var createSelect2Renderer = function(model, instance, td, row, col, prop, value, cellProperties){
-  var $td = $(td);
-  if(!$td.data("renderer")){
+  if(!getRendererFrom(td)){
+    $(td).empty();
     var renderer = new model(instance, td, row, col);
     renderer.createElements(cellProperties.selectorData, value);
-    $td.data("renderer",renderer);
+    saveRendererTo(td,renderer);
   }
   else
-    $td.data("renderer").setValue(value);
+    getRendererFrom(td).setValue(value);
   return td;    
 }
 
@@ -161,10 +171,9 @@ Handsontable.Select2Renderer = function (instance, td, row, col, prop, value, ce
 }
 
 Handsontable.Select2Editor = function (instance, td, row, col, prop, value, cellProperties) {
-  var $td = $(td);
-  instance.addHookOnce('beforeKeyDown', $td.data("renderer").beforeKeyDownHook);
+  instance.addHookOnce('beforeKeyDown', getRendererFrom(td).beforeKeyDownHook);
   instance.addHookOnce('afterSelection', function(){
-    instance.removeHook('beforeKeyDown', $td.data("renderer").beforeKeyDownHook);
+    instance.removeHook('beforeKeyDown', getRendererFrom(td).beforeKeyDownHook);
   }); //to avoid bug where beforeKeyDown is triggered when it is not current cell
   
 }

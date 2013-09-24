@@ -12,12 +12,13 @@ ko.bindingHandlers.handsontable = {
             {data: property("title") },
             {data: property("description") },
             {data: property("cover") },
-            {data: property("country"), type: "select2", selectorData: [{id:'AR',text:'Argentina'},{id:'BR',text:'Brasil'},{id:'CH',text:'Chile'},{id:'UY',text:'Uruguay'}] }
+            {data: property("country"), width: 200, type: "select2", selectorData: [{id:'AR',text:'Argentina'},{id:'BR',text:'Brasil'},{id:'CH',text:'Chile'},{id:'UY',text:'Uruguay'}] }
         ],
         removeRowPlugin: true,
         removeRowFunction: function(row){ value.remove(value()[row]); },
         isRemovable: function(row) { return !value()[row].title(); },
-        colMaxWidth: 250
+        colMaxWidth: 250,
+        width: 900
      });
 
  },
