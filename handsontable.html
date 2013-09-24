@@ -32,7 +32,7 @@
 		<p>This is a very powerful feature. Just remember to escape any HTML code that could be used for XSS
 		  attacks.</p>
 
-		<div id="example1" class="handsontable" data-bind="handsontable: {data: albums, columns: adaptFieldsToHandsontableColumns(fields())} "></div>
+		<div id="example1" class="handsontable" data-bind="handsontable: {data: albums, columns: adaptFieldsToHandsontableColumns(fields()), dataSchema: function(){ return new Album({ title: null, description: null, cover: null, country: null, authors: null }) }} "></div>
     <input type="button" value="Set Date As First Title" data-bind="click: setDateAsFirstTitle">
     <input type="button" value="La Argentinidad al palo" data-bind="click: setAllCountriesAR">
     <pre id="dump" data-bind="text: ko.toJSON(albums, null, 2)"/>
