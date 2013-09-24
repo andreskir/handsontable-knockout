@@ -157,7 +157,7 @@ var createSelect2Renderer = function(model, instance, td, row, col, prop, value,
 }
 
 Handsontable.Select2Renderer = function (instance, td, row, col, prop, value, cellProperties) {
-  return CreateSelect2Renderer(Select2Renderer, instance, td, row, col, prop, value, cellProperties);
+  return createSelect2Renderer(Select2Renderer, instance, td, row, col, prop, value, cellProperties);
 }
 
 Handsontable.Select2Editor = function (instance, td, row, col, prop, value, cellProperties) {
