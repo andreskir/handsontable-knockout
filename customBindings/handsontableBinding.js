@@ -4,7 +4,7 @@ ko.bindingHandlers.handsontable = {
 
      $(element).handsontable({
         data: options.data(),
-        minSpareRows: 1,
+        minSpareRows: options.allowAdd ? 1 : 0,
         dataSchema: options.dataSchema,
         colHeaders: getColumnsTitles(options.columns),
         columns: options.columns,
