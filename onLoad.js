@@ -29,7 +29,8 @@ function ViewModel(albums){
     { name: 'title', type: 'text', text: "Plain text title" },
     { name: 'description', type: 'text', text: "HTML Description" },
     { name: 'cover', type: 'text', text: "Cover" },
-    { name: 'country', type: 'select2', text: "Country", selectorData: [{id:'AR',text:'Argentina'},{id:'BR',text:'Brasil'},{id:'CH',text:'Chile'},{id:'UY',text:'Uruguay'}] }
+    { name: 'country', type: 'select2', text: "Country", selectorData: [{id:'AR',text:'Argentina'},{id:'BR',text:'Brasil'},{id:'CH',text:'Chile'},{id:'UY',text:'Uruguay'}] },
+    { name: 'authors', type: 'multiValue', text: "Authors", selectorData: [{id:'CP',text:'Charles Perez'},{id:'NG',text:'Nick Gomez'},{id:'WW',text:'Walter White'},{id:'ER',text:'Edward Rodriguez'}] }
   ]);
 
   albums.forEach(function(album){
@@ -44,19 +45,22 @@ $(document).ready(function () {
       title: "Professional JavaScript for Web Developers",
       description: "This <a href='http://bit.ly/sM1bDf'>book</a> provides a developer-level introduction along with more advanced and useful features of <b>JavaScript</b>.",
       cover: "http://ecx.images-amazon.com/images/I/51bRhyVTVGL._SL50_.jpg",
-      country: "BR"
+      country: "BR",
+      authors: ["CP"]
     },
     {
       title: "JavaScript: The Good Parts",
       description: "This book provides a developer-level introduction along with <b>more advanced</b> and useful features of JavaScript.",
       cover: "http://ecx.images-amazon.com/images/I/51gdVAEfPUL._SL50_.jpg",
-      country: "UY"
+      country: "UY",
+      authors: ["NG","WW"]
     },
     {
       title: "JavaScript: The Definitive Guide",
       description: "<em>JavaScript: The Definitive Guide</em> provides a thorough description of the core <b>JavaScript</b> language and both the legacy and standard DOMs implemented in web browsers.",
       cover: "http://ecx.images-amazon.com/images/I/51VFNL4T7kL._SL50_.jpg",
-      country: "AR"
+      country: "AR",
+      authors: ["ER"]
     }
   ];
 
