@@ -40,15 +40,7 @@ MultiValueRenderer.prototype.shouldDeleteAndRehook = function(keyCode){
 }
 
 Handsontable.MultiValueRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-  var $td = $(td);
-  if(!$td.data("renderer")){
-    var renderer = new MultiValueRenderer(instance, td, row, col);
-    renderer.createElements(cellProperties.selectorData, value);
-    $td.data("renderer",renderer);
-  }
-  else
-    $td.data("renderer").setValue(value);
-  return td;
+  return createSelect2Renderer(MultiValueRenderer, instance, td, row, col, prop, value, cellProperties);
 };
 
 Handsontable.MultiValueCell = {

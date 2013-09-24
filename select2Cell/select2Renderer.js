@@ -144,16 +144,20 @@ Select2Renderer.prototype.shouldRehook = function(keyCode){
   return [9, 33, 34, 35, 36, 37, 38, 39, 40, 13].indexOf(keyCode) == -1; // other non printable character
 }
 
-Handsontable.Select2Renderer = function (instance, td, row, col, prop, value, cellProperties) {
+var createSelect2Renderer = function(model, instance, td, row, col, prop, value, cellProperties){
   var $td = $(td);
   if(!$td.data("renderer")){
-    var renderer = new Select2Renderer(instance, td, row, col);
+    var renderer = new model(instance, td, row, col);
     renderer.createElements(cellProperties.selectorData, value);
     $td.data("renderer",renderer);
   }
   else
     $td.data("renderer").setValue(value);
-  return td;
+  return td;    
+}
+
+Handsontable.Select2Renderer = function (instance, td, row, col, prop, value, cellProperties) {
+  return CreateSelect2Renderer(Select2Renderer, instance, td, row, col, prop, value, cellProperties);
 }
 
 Handsontable.Select2Editor = function (instance, td, row, col, prop, value, cellProperties) {
