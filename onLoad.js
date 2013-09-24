@@ -25,6 +25,13 @@ function ViewModel(albums){
     self.albums.remove(self.albums()[index])
   }
 
+  this.fields = ko.observableArray([
+    { name: 'title', type: 'text', text: "Plain text title" },
+    { name: 'description', type: 'text', text: "HTML Description" },
+    { name: 'cover', type: 'text', text: "Cover" },
+    { name: 'country', type: 'select2', text: "Country", selectorData: [{id:'AR',text:'Argentina'},{id:'BR',text:'Brasil'},{id:'CH',text:'Chile'},{id:'UY',text:'Uruguay'}] }
+  ]);
+
   albums.forEach(function(album){
     self.albums.push(new Album(album))
   });

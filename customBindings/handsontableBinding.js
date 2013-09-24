@@ -1,22 +1,16 @@
 ko.bindingHandlers.handsontable = {
  init: function (element, valueAccessor, allBindingsAccessor) {
-     var value = valueAccessor();   
-     var colHeaders = ["Plain text title", "HTML Description", "Cover", "Country"];
+     var options = valueAccessor();   
 
      $(element).handsontable({
-        data: value(),
+        data: options.data(),
         minSpareRows: 1,
         dataSchema: function(){ return new Album({ title: null, description: null, cover: null, country: null }) },
-        colHeaders: colHeaders,
-        columns: [
-            {data: property("title") },
-            {data: property("description") },
-            {data: property("cover") },
-            {data: property("country"), width: 200, type: "select2", selectorData: [{id:'AR',text:'Argentina'},{id:'BR',text:'Brasil'},{id:'CH',text:'Chile'},{id:'UY',text:'Uruguay'}] }
-        ],
+        colHeaders: getColumnsTitles(options.columns),
+        columns: options.columns,
         removeRowPlugin: true,
-        removeRowFunction: function(row){ value.remove(value()[row]); },
-        isRemovable: function(row) { return !value()[row].title(); },
+        removeRowFunction: function(row){ options.data.remove(options.data()[row]); },
+        isRemovable: function(row) { return !options.data()[row].title(); },
         colMaxWidth: 250,
         width: 900
      });
@@ -27,7 +21,23 @@ ko.bindingHandlers.handsontable = {
  }
 };
 
-function property(attr) {
+var getColumnsTitles = function(columns){
+    return columns.map(function(col){ return col.title });
+}
+
+var adaptFieldsToHandsontableColumns = function(fields){
+  return fields.map(function(field){
+    return { 
+      data: property(field.name),
+      width: 200,
+      type: field.type,
+      selectorData: field.selectorData,
+      title: field.text
+    };
+  });
+}
+
+var property = function (attr) {
   return function (item, val) {
     if (typeof val === 'undefined') {
       return item[attr]();
