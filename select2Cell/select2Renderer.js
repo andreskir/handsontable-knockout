@@ -1,187 +1,201 @@
-function Select2Renderer (instance, td, row, col){
+var Select2Renderer, createSelect2Renderer, findSelect2Container, getRendererFrom, saveRendererTo,
+  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-    var self = this;
+Select2Renderer = (function() {
+  function Select2Renderer(instance, td, row, col) {
+    this.beforeKeyDownHook = __bind(this.beforeKeyDownHook, this);
+    this.returnPressed = __bind(this.returnPressed, this);
+    this.exitKeys = __bind(this.exitKeys, this);
     this.instance = instance;
     this.td = td;
     this.row = row;
     this.col = col;
+  }
 
-    this.createElements = function(selectorData,value) {
-      self.defaultOptions.data = selectorData;
-      var $select = $('<input class="select2Element" style="width: 100%" tabindex="-1">');
-      $select.appendTo(self.td);
-      self.select2 = $select.select2(self.defaultOptions);
-      self.setValue(value);
-      this.bindOnBlur();
-      this.bindOnOpening();
-      this.bindMyEvents();
+  Select2Renderer.prototype.defaultOptions = {
+    placeholder: "Select report type",
+    allowClear: true,
+    openOnEnter: false
+  };
+
+  Select2Renderer.prototype.createElements = function(selectorData, value) {
+    var $select;
+    this.defaultOptions.data = selectorData;
+    $select = $('<input class="select2Element" style="width: 100%" tabindex="-1">');
+    $select.appendTo(this.td);
+    this.select2 = $select.select2(this.defaultOptions);
+    this.setValue(value);
+    this.bindOnBlur();
+    this.bindOnOpening();
+    return this.bindMyEvents();
+  };
+
+  Select2Renderer.prototype.setValue = function(value) {
+    return this.select2.select2("val", value);
+  };
+
+  Select2Renderer.prototype.selectCurrentCell = function() {
+    return this.instance.selectCell(this.row, this.col, this.row, this.col, false);
+  };
+
+  Select2Renderer.prototype.bindMyEvents = function() {
+    return this.bindOnSelecting();
+  };
+
+  Select2Renderer.prototype.bindOnBlur = function() {
+    var _this = this;
+    return this.select2.on("select2-blur", function() {
+      return _this.saveData();
+    });
+  };
+
+  Select2Renderer.prototype.bindOnOpening = function() {
+    var _this = this;
+    return this.select2.on("select2-opening", function() {
+      if (_this.instance.getSelected() && !_this.arraysEqual(_this.instance.getSelected(), [_this.row, _this.col, _this.row, _this.col])) {
+        _this.selectCurrentCell();
+      }
+      return _this.select2.select2("container").find(".select2-input").off('keydown.exitKeys').on('keydown.exitKeys', _this.exitKeys);
+    });
+  };
+
+  Select2Renderer.prototype.bindOnSelecting = function() {
+    var runLater,
+      _this = this;
+    runLater = function(func) {
+      return setTimeout(func, 0);
     };
+    return this.select2.on("select2-selecting", function() {
+      return runLater(function() {
+        return _this.selectCurrentCell();
+      });
+    });
+  };
 
-    this.setValue = function(value){
-      self.select2.select2("val",value);
+  Select2Renderer.prototype.exitKeys = function(event) {
+    switch (event.keyCode) {
+      case 9:
+        this.finishEditing();
+        return event.preventDefault();
+      case 39:
+      case 37:
+      case 27:
+        return this.finishEditing();
+      case 13:
+        return this.returnPressed();
+      default:
+        return event.stopImmediatePropagation();
     }
+  };
 
-    this.selectCurrentCell = function(){
-      self.instance.selectCell(self.row,self.col,self.row,self.col,false);
-    };
+  Select2Renderer.prototype.returnPressed = function() {
+    return this.finishEditing();
+  };
 
-    this.bindOnBlur = function(){
-      self.select2.on("select2-blur",function(){
-        self.saveData();
-      });
-    };
+  Select2Renderer.prototype.shouldBeginEditing = function(keyCode) {
+    return Handsontable.helper.isPrintableChar(keyCode) || keyCode === 113;
+  };
 
-    this.bindOnOpening = function() {
-      self.select2.on("select2-opening",function(){
-        if(self.instance.getSelected() && !arraysEqual(self.instance.getSelected(),[self.row,self.col,self.row,self.col]))
-          self.selectCurrentCell();
-        self.select2.select2("container").find(".select2-input").off('keydown.exitKeys').on('keydown.exitKeys', self.exitKeys);        
-      });
-    };
+  Select2Renderer.prototype.shouldDeleteAndRehook = function(keyCode) {
+    return [8, 46].indexOf(keyCode) >= 0;
+  };
 
-    this.exitKeys = function (event) {
+  Select2Renderer.prototype.shouldRehook = function(keyCode) {
+    return [9, 33, 34, 35, 36, 37, 38, 39, 40, 13].indexOf(keyCode) === -1;
+  };
 
-        switch (event.keyCode) {
+  Select2Renderer.prototype.finishEditing = function() {
+    this.saveData();
+    this.select2.select2("close");
+    return this.selectCurrentCell();
+  };
 
-          case 9: /* tab */
-            self.finishEditing();
-            event.preventDefault();
-            break;
+  Select2Renderer.prototype.saveData = function() {
+    return this.instance.populateFromArray(this.row, this.col, this.getValue(), null, null, 'edit');
+  };
 
-          case 39: /* arrow right */
-            self.finishEditing();
-            break;
-
-          case 37: /* arrow left */
-            self.finishEditing();
-            break;
-
-          case 27: /* ESC */
-            self.finishEditing();
-            break;
-
-          case 13: /* return/enter */
-            self.returnPressed();
-            break;
-          default:
-            event.stopImmediatePropagation(); //backspace, delete, home, end, CTRL+A, CTRL+C, CTRL+V, CTRL+X should only work locally when cell is edited (not in table context)
-            break;
-        }
-    };
-
-    this.finishEditing = function() {
-      self.saveData();
-      self.select2.select2("close");
-      self.selectCurrentCell(); //removes focus from select2 and triggers Editor where hookOnce is binded
-    };
-    this.saveData = function(){
-      self.instance.populateFromArray(self.row, self.col, self.getValue(), null, null, 'edit');
-    };
-
-    var arraysEqual = function(arr1, arr2) {
-      for (var i=0;i<arr1.length;i++){
-          if (arr1[i] != arr2[i]) return false;
+  Select2Renderer.prototype.arraysEqual = function(arr1, arr2) {
+    var i, item, _i, _len;
+    for (i = _i = 0, _len = arr1.length; _i < _len; i = ++_i) {
+      item = arr1[i];
+      if (arr1[i] !== arr2[i]) {
+        return false;
       }
-      return true;
-    };
+    }
+    return true;
+  };
 
-    this.renderInstance = function(){
-      this.instance.render();
-    };
-    this.getValue = function(){
-      return [[self.select2.select2("val")]];
-    };
-    this.addHookOnce = function(){
-      self.instance.addHookOnce('beforeKeyDown', self.beforeKeyDownHook);
-    };
+  Select2Renderer.prototype.renderInstance = function() {
+    return this.instance.render();
+  };
 
-    this.beforeKeyDownHook = function(event) {
-      if (self.shouldBeginEditing(event.keyCode)) {
-        event.stopImmediatePropagation();
-        self.beginEditing();
-      }  else if (self.shouldDeleteAndRehook(event.keyCode)){ 
-        self.select2.select2("val","");
-        self.addHookOnce();
-      }  else if (self.shouldRehook(event.keyCode)){
-        self.addHookOnce();
-      }
-    };
+  Select2Renderer.prototype.getValue = function() {
+    return [[this.select2.select2("val")]];
+  };
 
-    this.beginEditing = function(){
-      self.select2.select2("open");
-    };
-}
+  Select2Renderer.prototype.addHookOnce = function() {
+    return this.instance.addHookOnce('beforeKeyDown', this.beforeKeyDownHook);
+  };
 
-Select2Renderer.prototype.defaultOptions = {
-        placeholder: "Select report type",
-        allowClear: true,
-        openOnEnter: false
-}
+  Select2Renderer.prototype.beforeKeyDownHook = function(event) {
+    if (this.shouldBeginEditing(event.keyCode)) {
+      event.stopImmediatePropagation();
+      return this.beginEditing();
+    } else if (this.shouldDeleteAndRehook(event.keyCode)) {
+      this.select2.select2("val", "");
+      return this.addHookOnce();
+    } else if (this.shouldRehook(event.keyCode)) {
+      return this.addHookOnce();
+    }
+  };
 
-Select2Renderer.prototype.bindMyEvents = function(){
-  var self = this;
-  this.bindOnSelecting();
-}
+  Select2Renderer.prototype.beginEditing = function() {
+    return this.select2.select2("open");
+  };
 
-Select2Renderer.prototype.bindOnSelecting = function(){
-  var self = this;
-  this.select2.on("select2-selecting",function(){setTimeout(function(){self.selectCurrentCell()}, 0)}); //otherwise select2 triggers focus after selecting CurrentCell
-}
+  return Select2Renderer;
 
-Select2Renderer.prototype.returnPressed = function(){
-  this.finishEditing();
-}
+})();
 
-Select2Renderer.prototype.shouldBeginEditing = function(keyCode){
-  return Handsontable.helper.isPrintableChar(keyCode) || 
-    keyCode === 113; //f2
-}
-
-Select2Renderer.prototype.shouldDeleteAndRehook = function(keyCode){
-  return [8, 46].indexOf(keyCode)>=0; //backspace or delete
-}
-
-Select2Renderer.prototype.shouldRehook = function(keyCode){
-  return [9, 33, 34, 35, 36, 37, 38, 39, 40, 13].indexOf(keyCode) == -1; // other non printable character
-}
-
-var findSelect2Container = function(td){
+findSelect2Container = function(td) {
   return $(td).find(".select2Element").select2("container");
 };
-var getRendererFrom = function(td){
+
+getRendererFrom = function(td) {
   return findSelect2Container(td).data("renderer");
-}
-var saveRendererTo = function(td, renderer){
+};
+
+saveRendererTo = function(td, renderer) {
   return findSelect2Container(td).data("renderer", renderer);
-}
+};
 
-var createSelect2Renderer = function(model, instance, td, row, col, prop, value, cellProperties){
-  if(!getRendererFrom(td)){
+createSelect2Renderer = function(model, instance, td, row, col, prop, value, cellProperties) {
+  var renderer;
+  if (!getRendererFrom(td)) {
     $(td).empty();
-    var renderer = new model(instance, td, row, col);
+    renderer = new model(instance, td, row, col);
     renderer.createElements(cellProperties.selectorData, value);
-    saveRendererTo(td,renderer);
-  }
-  else
+    saveRendererTo(td, renderer);
+  } else {
     getRendererFrom(td).setValue(value);
-  return td;    
-}
+  }
+  return td;
+};
 
-Handsontable.Select2Renderer = function (instance, td, row, col, prop, value, cellProperties) {
+Handsontable.Select2Renderer = function(instance, td, row, col, prop, value, cellProperties) {
   return createSelect2Renderer(Select2Renderer, instance, td, row, col, prop, value, cellProperties);
-}
+};
 
-Handsontable.Select2Editor = function (instance, td, row, col, prop, value, cellProperties) {
+Handsontable.Select2Editor = function(instance, td, row, col, prop, value, cellProperties) {
   instance.addHookOnce('beforeKeyDown', getRendererFrom(td).beforeKeyDownHook);
-  instance.addHookOnce('afterSelection', function(){
-    instance.removeHook('beforeKeyDown', getRendererFrom(td).beforeKeyDownHook);
-  }); //to avoid bug where beforeKeyDown is triggered when it is not current cell
-  
-}
+  return instance.addHookOnce('afterSelection', function() {
+    return instance.removeHook('beforeKeyDown', getRendererFrom(td).beforeKeyDownHook);
+  });
+};
 
 Handsontable.Select2Cell = {
   editor: Handsontable.Select2Editor,
   renderer: Handsontable.Select2Renderer
 };
-Handsontable.cellTypes.select2 = Handsontable.Select2Cell;
 
+Handsontable.cellTypes.select2 = Handsontable.Select2Cell;
