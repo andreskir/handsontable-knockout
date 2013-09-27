@@ -11,7 +11,7 @@ ko.bindingHandlers.handsontable = {
         removeRowPlugin: true,
         removeRowFunction: function(row){ options.data.remove(options.data()[row]); },
         isRemovable: function(row) { return !options.data()[row].title(); },
-        colMaxWidth: 250,
+        colMaxWidth: 150,
         enterBeginsEditing: false
      });
 
@@ -29,10 +29,10 @@ var adaptFieldsToHandsontableColumns = function(fields){
   return fields.map(function(field){
     return { 
       data: property(field.name),
-      width: 200,
       type: field.type,
-      selectorData: field.selectorData,
-      title: field.text
+      source: field.selectorData ? field.selectorData.map(function(item){return item.text}) : [],
+      title: field.text,
+      strict: true
     };
   });
 }
