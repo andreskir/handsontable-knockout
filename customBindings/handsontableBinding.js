@@ -24,16 +24,3 @@ ko.bindingHandlers.handsontable = {
 var getColumnsTitles = function(columns){
     return columns.map(function(col){ return col.title });
 }
-
-var adaptFieldsToHandsontableColumns = function(fields){
-  return FieldsToColumnsMapper.map(fields);
-}
-
-var property = function (attr) {
-  return function (item, val) {
-    if (typeof val === 'undefined') {
-      return item[attr]();
-    }
-    return item[attr](val);
-  }
-}
