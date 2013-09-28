@@ -1,0 +1,35 @@
+class FieldToColumnAdapter
+	@getColumnFor: (field)->
+		data: @valueAccessor(field.name()),
+		type: field.type(),
+		title: field.text(),
+
+	@valueAccessor: (fieldName)->
+		(row, val)->
+			return row.getFieldByName(fieldName).value() if typeof val == 'undefined'
+			row.getFieldByName(fieldName).value(val)
+
+class SelectorToColumnAdapter extends FieldToColumnAdapter
+	@getColumnFor: (field)->
+		column = super field
+		column.source = field.selectorData().map (item)->item.text()
+		column.strict = true
+		return column
+
+	@valueAccessor: (fieldName)=>
+		(row,val)=>
+			return row.getFieldByName(fieldName).getDisplayValue() if typeof val == 'undefined'
+			row.getFieldByName(fieldName).setValue val
+
+class FieldToColumnAdapterRunner
+	adaptField: (field)->
+		FieldToColumnAdapter.getColumnFor field
+
+	adaptSelector: (selector)->
+		SelectorToColumnAdapter.getColumnFor selector
+
+class FieldsToColumnsMapper
+	@map: (fields)->
+		fields.map (field)->
+			field.adapt new FieldToColumnAdapterRunner()
+
