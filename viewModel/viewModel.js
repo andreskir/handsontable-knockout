@@ -47,7 +47,7 @@ Selector = (function(_super) {
 
   Selector.prototype.setValue = function(text) {
     if (!text) {
-      return this.value(null);
+      return this.value("");
     } else {
       return this.value(this.getSelectorPair('text', text).id());
     }

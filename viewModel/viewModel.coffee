@@ -17,7 +17,7 @@ class Selector extends Field
     @getSelectorPair('id',@value()).text()
   setValue: (text)->
     if !text
-      @value null
+      @value ""
     else
       @value @getSelectorPair('text',text).id()
 
