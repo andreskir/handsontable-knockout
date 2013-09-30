@@ -1,13 +1,15 @@
-class Select2Renderer
+class MultiValueRenderer
 	constructor: (instance, td, row, col) ->
 		@instance = instance
 		@td = td
 		@row = row
 		@col = col
+		@isOpened = false
 
 	defaultOptions:
 		allowClear: true
 		openOnEnter: false
+		multiple: true
 
 	createElements: (selectorData,value) ->
 		@defaultOptions.data = selectorData;
@@ -15,7 +17,6 @@ class Select2Renderer
 		$select.appendTo @td;
 		@select2 = $select.select2 @defaultOptions
 		@setValue value
-		@bindOnBlur()
 		@bindOnOpening()
 		@bindMyEvents()
 
@@ -26,22 +27,25 @@ class Select2Renderer
 		@instance.selectCell @row,@col,@row,@col,false
 
 	bindMyEvents: () ->
-		@bindOnSelecting();
-
-	bindOnBlur: () ->
-		# @select2.on "select2-blur",() =>
-		# 	@saveData()
+	    runLater = (ms,func) -> setTimeout func, ms
+	    @select2.on "select2-open",()=>
+	      @isOpened = true
+	      runLater 100,()=>
+	        @instance.view.render()
+	    @select2.on "select2-close",()=>
+	      runLater 100,()=>
+	        @isOpened = false
+	        @instance.view.render() #otherwise keyDown is trigged after isOpened is set to false
+	    @select2.on "change",()=>
+	      runLater 100,()=>
+	      	@saveData()
+	        @instance.view.render()
 
 	bindOnOpening: () ->
 		@select2.on "select2-opening", () =>
 			if @instance.getSelected() && !@arraysEqual @instance.getSelected(),[@row,@col,@row,@col]
 				@selectCurrentCell()
 			@select2.select2("container").find(".select2-input").off('keydown.exitKeys').on 'keydown.exitKeys', @exitKeys
-
-	bindOnSelecting: () ->
-		runLater = (func) -> setTimeout func, 0
-		@select2.on "select2-selecting", () =>
-			runLater ()=>@selectCurrentCell() #otherwise select2 triggers focus after selecting CurrentCell
 
 	exitKeys: (event) =>
 		switch event.keyCode
@@ -53,7 +57,8 @@ class Select2Renderer
 			else event.stopImmediatePropagation() #backspace, delete, home, end, CTRL+A, CTRL+C, CTRL+V, CTRL+X should only work locally when cell is edited (not in table context)
 
 	returnPressed: () =>
-		@finishEditing()
+	    if !@isOpened
+	      @finishEditing()
 
 	finishEditing: () ->
 		@saveData()
@@ -74,7 +79,7 @@ class Select2Renderer
 	getValue: () ->
 		[[@select2.select2 "val"]]
 
-class Select2Editor
+class MultiValueEditor
 	constructor: (instance, td) ->
 		@instance = instance
 		@td = td
@@ -99,31 +104,31 @@ class Select2Editor
 		@select2.select2 "open"
 
 	shouldBeginEditing: (keyCode) ->
-		Handsontable.helper.isPrintableChar(keyCode) || keyCode == 113 #f2
+		Handsontable.helper.isPrintableChar(keyCode) || keyCode == 113 || keyCode==8 # or backspace
 
 	shouldDeleteAndRehook: (keyCode) ->
-		[8, 46].indexOf(keyCode)>=0 #backspace or delete
+	    keyCode==46
 
 	shouldRehook: (keyCode) ->
 		[9, 33, 34, 35, 36, 37, 38, 39, 40, 13].indexOf(keyCode) == -1 #other non printable character
 
-createSelect2Renderer = (model, instance, td, row, col, prop, value, cellProperties) ->
+create2Renderer = (instance, td, row, col, prop, value, cellProperties) ->
 	$(td).empty()
-	renderer = new model instance, td, row, col
+	renderer = new MultiValueRenderer instance, td, row, col
 	renderer.createElements cellProperties.selectorData, value
 	return td
 
 
-Handsontable.Select2Renderer = (instance, td, row, col, prop, value, cellProperties) ->
-	createSelect2Renderer Select2Renderer, instance, td, row, col, prop, value, cellProperties
+Handsontable.MultiValueRenderer = (instance, td, row, col, prop, value, cellProperties) ->
+	create2Renderer instance, td, row, col, prop, value, cellProperties
 
-Handsontable.Select2Editor = (instance, td, row, col, prop, value, cellProperties) ->
-	editor = new Select2Editor instance, td
+Handsontable.MultiValueEditor = (instance, td, row, col, prop, value, cellProperties) ->
+	editor = new MultiValueEditor instance, td
 	editor.addHookOnce()
 
-Handsontable.Select2Cell =
-	editor: Handsontable.Select2Editor
-	renderer: Handsontable.Select2Renderer
+Handsontable.MultiValueCell =
+	editor: Handsontable.MultiValueEditor
+	renderer: Handsontable.MultiValueRenderer
 
-Handsontable.cellTypes.select2 = Handsontable.Select2Cell
+Handsontable.cellTypes.multiValue = Handsontable.MultiValueCell;
 
