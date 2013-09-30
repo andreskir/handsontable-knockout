@@ -27,18 +27,18 @@ class MultiValueRenderer
 		@instance.selectCell @row,@col,@row,@col,false
 
 	bindMyEvents: () ->
-	    runLater = (ms,func) -> setTimeout func, ms
-	    @select2.on "select2-open",()=>
-	      @isOpened = true
-	      runLater 100,()=>
-	        @instance.view.render()
-	    @select2.on "select2-close",()=>
-	      runLater 100,()=>
-	        @isOpened = false
-	        @instance.view.render() #otherwise keyDown is trigged after isOpened is set to false
-	    @select2.on "change",()=>
-	      runLater 100,()=>
-	        @instance.view.render()
+		runLater = (ms,func) -> setTimeout func, ms
+		@select2.on "select2-open",()=>
+			@isOpened = true
+			runLater 100,()=>
+				@instance.view.render()
+		@select2.on "select2-close",()=>
+			runLater 100,()=>
+				@isOpened = false
+				@instance.view.render() #otherwise keyDown is trigged after isOpened is set to false
+		@select2.on "change",()=>
+			runLater 100,()=>
+				@instance.view.render()
 
 	bindOnOpening: () ->
 		@select2.on "select2-opening", () =>
@@ -56,8 +56,8 @@ class MultiValueRenderer
 			else event.stopImmediatePropagation() #backspace, delete, home, end, CTRL+A, CTRL+C, CTRL+V, CTRL+X should only work locally when cell is edited (not in table context)
 
 	returnPressed: () =>
-	    if !@isOpened
-	      @finishEditing()
+		if !@isOpened
+			@finishEditing()
 
 	finishEditing: () ->
 		@saveData()
@@ -110,7 +110,7 @@ class MultiValueEditor
 		Handsontable.helper.isPrintableChar(keyCode) || keyCode == 113 || keyCode==8 # or backspace
 
 	shouldDeleteAndRehook: (keyCode) ->
-	    keyCode==46
+		keyCode==46
 
 	shouldRehook: (keyCode) ->
 		[9, 33, 34, 35, 36, 37, 38, 39, 40, 13].indexOf(keyCode) == -1 #other non printable character
@@ -141,4 +141,3 @@ Handsontable.MultiValueCell =
 	renderer: Handsontable.MultiValueRenderer
 
 Handsontable.cellTypes.multiValue = Handsontable.MultiValueCell;
-
