@@ -6,6 +6,8 @@ class FieldToColumnAdapter
 
 	@valueAccessor: (fieldName)->
 		(row, val)->
+			if row.isNewRow
+				return ""
 			return row.getFieldByName(fieldName).value() if typeof val == 'undefined'
 			row.getFieldByName(fieldName).value(val)
 

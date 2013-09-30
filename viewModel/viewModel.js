@@ -124,7 +124,10 @@ InputGrid = (function() {
   };
 
   InputGrid.prototype.newRowTemplate = function() {
-    return new Row(this.fieldsData, {});
+    var row;
+    row = new Row(this.fieldsData, {});
+    row.isNewRow = true;
+    return row;
   };
 
   InputGrid.prototype.dataMatrix = function() {

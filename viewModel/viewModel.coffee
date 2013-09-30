@@ -56,7 +56,9 @@ class InputGrid
     @rows.remove @rows()[index]
 
   newRowTemplate: ()=>
-    new Row(@fieldsData,{})
+    row = new Row(@fieldsData,{})
+    row.isNewRow = true
+    row
 
   dataMatrix: ()->
     @rows().map (row)->

@@ -15,6 +15,9 @@ FieldToColumnAdapter = (function() {
 
   FieldToColumnAdapter.valueAccessor = function(fieldName) {
     return function(row, val) {
+      if (row.isNewRow) {
+        return "";
+      }
       if (typeof val === 'undefined') {
         return row.getFieldByName(fieldName).value();
       }

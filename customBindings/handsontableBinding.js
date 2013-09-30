@@ -13,9 +13,16 @@ ko.bindingHandlers.handsontable = {
         isRemovable: function(row) { return options.isRemovable() },
         colMaxWidth: 150,
         enterBeginsEditing: true,
-        afterCreateRow: function(){options.data.notifySubscribers()}
+        afterCreateRow: function(){
+          options.data.notifySubscribers()
+        },
+        beforeChange: function(changes,source){
+          if(source=='edit'){
+            var row = changes[0][0];
+            options.markRowAsOld(options.data()[row]);            
+          }
+        }
      });
-
  },
  update: function (element, valueAccessor) {
      value = valueAccessor();
