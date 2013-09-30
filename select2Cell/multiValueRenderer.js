@@ -1,4 +1,4 @@
-var MultiValueEditor, MultiValueRenderer, create2Renderer,
+var MultiValueEditor, MultiValueRenderer, getSelect2, getSelect2Value, saveSelect2,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 MultiValueRenderer = (function() {
@@ -55,14 +55,10 @@ MultiValueRenderer = (function() {
         return _this.instance.view.render();
       });
     });
-    this.select2.on("change", function() {
+    return this.select2.on("change", function() {
       return runLater(100, function() {
-        _this.saveData();
         return _this.instance.view.render();
       });
-    });
-    return this.select2.on("blur", function() {
-      return _this.saveData();
     });
   };
 
@@ -105,7 +101,7 @@ MultiValueRenderer = (function() {
   };
 
   MultiValueRenderer.prototype.saveData = function() {
-    return this.instance.populateFromArray(this.row, this.col, this.getValue(), null, null, 'edit');
+    return saveSelect2(this.instance, this.td, this.row, this.col);
   };
 
   MultiValueRenderer.prototype.arraysEqual = function(arr1, arr2) {
@@ -124,7 +120,7 @@ MultiValueRenderer = (function() {
   };
 
   MultiValueRenderer.prototype.getValue = function() {
-    return [[this.select2.select2("val")]];
+    return getSelect2Value(this.select2);
   };
 
   return MultiValueRenderer;
@@ -132,11 +128,13 @@ MultiValueRenderer = (function() {
 })();
 
 MultiValueEditor = (function() {
-  function MultiValueEditor(instance, td) {
+  function MultiValueEditor(instance, td, row, col) {
     this.beforeKeyDownHook = __bind(this.beforeKeyDownHook, this);
     this.instance = instance;
     this.td = td;
-    this.select2 = $(td).find(".select2Element").select2("container");
+    this.row = row;
+    this.col = col;
+    this.select2 = getSelect2(td);
   }
 
   MultiValueEditor.prototype.addHookOnce = function() {
@@ -160,6 +158,10 @@ MultiValueEditor = (function() {
   };
 
   MultiValueEditor.prototype.beginEditing = function() {
+    var _this = this;
+    this.instance.addHookOnce('beforeSelection', function() {
+      return saveSelect2(_this.instance, _this.td, _this.row, _this.col);
+    });
     return this.select2.select2("open");
   };
 
@@ -179,7 +181,22 @@ MultiValueEditor = (function() {
 
 })();
 
-create2Renderer = function(instance, td, row, col, prop, value, cellProperties) {
+getSelect2 = function(td) {
+  return $(td).find(".select2Element").select2("container");
+};
+
+saveSelect2 = function(instance, td, row, col) {
+  var cellValue, select2;
+  select2 = getSelect2(td);
+  cellValue = getSelect2Value(select2);
+  return instance.populateFromArray(row, col, cellValue, null, null, 'edit');
+};
+
+getSelect2Value = function(select2) {
+  return [[select2.select2("val")]];
+};
+
+Handsontable.MultiValueRenderer = function(instance, td, row, col, prop, value, cellProperties) {
   var renderer;
   $(td).empty();
   renderer = new MultiValueRenderer(instance, td, row, col);
@@ -187,13 +204,9 @@ create2Renderer = function(instance, td, row, col, prop, value, cellProperties) 
   return td;
 };
 
-Handsontable.MultiValueRenderer = function(instance, td, row, col, prop, value, cellProperties) {
-  return create2Renderer(instance, td, row, col, prop, value, cellProperties);
-};
-
 Handsontable.MultiValueEditor = function(instance, td, row, col, prop, value, cellProperties) {
   var editor;
-  editor = new MultiValueEditor(instance, td);
+  editor = new MultiValueEditor(instance, td, row, col);
   return editor.addHookOnce();
 };
 

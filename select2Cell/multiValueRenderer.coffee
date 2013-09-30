@@ -38,10 +38,7 @@ class MultiValueRenderer
 	        @instance.view.render() #otherwise keyDown is trigged after isOpened is set to false
 	    @select2.on "change",()=>
 	      runLater 100,()=>
-	        @saveData()
 	        @instance.view.render()
-	    @select2.on "blur",()=>
-	        @saveData()
 
 	bindOnOpening: () ->
 		@select2.on "select2-opening", () =>
@@ -68,7 +65,7 @@ class MultiValueRenderer
 		@selectCurrentCell() #removes focus from select2 and triggers Editor where hookOnce is binded
 
 	saveData: () ->
-		@instance.populateFromArray @row, @col, @getValue(), null, null, 'edit'
+		saveSelect2 @instance,@td,@row,@col
 
 	arraysEqual: (arr1,arr2) ->
 		for item, i in arr1
@@ -79,13 +76,15 @@ class MultiValueRenderer
 		@instance.render()
 
 	getValue: () ->
-		[[@select2.select2 "val"]]
+		getSelect2Value @select2
 
 class MultiValueEditor
-	constructor: (instance, td) ->
+	constructor: (instance, td, row, col) ->
 		@instance = instance
 		@td = td
-		@select2 = $(td).find(".select2Element").select2 "container"
+		@row = row
+		@col = col
+		@select2 = getSelect2 td
 
 	addHookOnce: () ->
 		@instance.addHookOnce 'beforeKeyDown', @beforeKeyDownHook
@@ -103,6 +102,8 @@ class MultiValueEditor
 			@addHookOnce()
 
 	beginEditing: () ->
+		@instance.addHookOnce 'beforeSelection', () =>
+			saveSelect2 @instance,@td,@row,@col
 		@select2.select2 "open"
 
 	shouldBeginEditing: (keyCode) ->
@@ -114,18 +115,25 @@ class MultiValueEditor
 	shouldRehook: (keyCode) ->
 		[9, 33, 34, 35, 36, 37, 38, 39, 40, 13].indexOf(keyCode) == -1 #other non printable character
 
-create2Renderer = (instance, td, row, col, prop, value, cellProperties) ->
+getSelect2 = (td)->
+	$(td).find(".select2Element").select2 "container"
+
+saveSelect2 = (instance, td, row, col)->
+	select2 = getSelect2 td
+	cellValue = getSelect2Value select2
+	instance.populateFromArray row, col, cellValue, null, null, 'edit'
+
+getSelect2Value = (select2)->
+	[[select2.select2 "val"]]
+
+Handsontable.MultiValueRenderer = (instance, td, row, col, prop, value, cellProperties) ->
 	$(td).empty()
 	renderer = new MultiValueRenderer instance, td, row, col
 	renderer.createElements cellProperties.selectorData, value
 	return td
 
-
-Handsontable.MultiValueRenderer = (instance, td, row, col, prop, value, cellProperties) ->
-	create2Renderer instance, td, row, col, prop, value, cellProperties
-
 Handsontable.MultiValueEditor = (instance, td, row, col, prop, value, cellProperties) ->
-	editor = new MultiValueEditor instance, td
+	editor = new MultiValueEditor instance, td, row, col
 	editor.addHookOnce()
 
 Handsontable.MultiValueCell =

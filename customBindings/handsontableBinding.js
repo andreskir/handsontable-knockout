@@ -12,7 +12,7 @@ ko.bindingHandlers.handsontable = {
         removeRowFunction: function(row){ options.data.remove(options.data()[row]); },
         isRemovable: function(row) { return options.isRemovable() },
         colMaxWidth: 150,
-        enterBeginsEditing: false,
+        enterBeginsEditing: true,
         afterCreateRow: function(){options.data.notifySubscribers()}
      });
 
