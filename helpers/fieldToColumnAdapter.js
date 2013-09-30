@@ -74,6 +74,7 @@ MultiValueToColumnAdapter = (function(_super) {
         text: item.text()
       };
     });
+    column.width = 200;
     return column;
   };
 

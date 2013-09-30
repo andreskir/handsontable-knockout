@@ -6,7 +6,6 @@ class Select2Renderer
 		@col = col
 
 	defaultOptions:
-		placeholder: "Select report type"
 		allowClear: true
 		openOnEnter: false
 
@@ -30,8 +29,8 @@ class Select2Renderer
 		@bindOnSelecting();
 
 	bindOnBlur: () ->
-		@select2.on "select2-blur",() =>
-			@saveData()
+		# @select2.on "select2-blur",() =>
+		# 	@saveData()
 
 	bindOnOpening: () ->
 		@select2.on "select2-opening", () =>
@@ -56,15 +55,6 @@ class Select2Renderer
 	returnPressed: () =>
 		@finishEditing()
 
-	shouldBeginEditing: (keyCode) ->
-		Handsontable.helper.isPrintableChar(keyCode) || keyCode == 113 #f2
-
-	shouldDeleteAndRehook: (keyCode) ->
-		[8, 46].indexOf(keyCode)>=0 #backspace or delete
-
-	shouldRehook: (keyCode) ->
-		[9, 33, 34, 35, 36, 37, 38, 39, 40, 13].indexOf(keyCode) == -1 #other non printable character
-
 	finishEditing: () ->
 		@saveData()
 		@select2.select2 "close"
@@ -84,8 +74,16 @@ class Select2Renderer
 	getValue: () ->
 		[[@select2.select2 "val"]]
 
+class Select2Editor
+	constructor: (instance, td) ->
+		@instance = instance
+		@td = td
+		@select2 = $(td).find(".select2Element").select2 "container"
+
 	addHookOnce: () ->
 		@instance.addHookOnce 'beforeKeyDown', @beforeKeyDownHook
+		@instance.addHookOnce 'afterSelection', () =>
+			@instance.removeHook 'beforeKeyDown', @beforeKeyDownHook #to avoid bug where beforeKeyDown is triggered when it is not current cell
 
 	beforeKeyDownHook: (event) =>
 		if @shouldBeginEditing event.keyCode
@@ -100,25 +98,19 @@ class Select2Renderer
 	beginEditing: () ->
 		@select2.select2 "open"
 
+	shouldBeginEditing: (keyCode) ->
+		Handsontable.helper.isPrintableChar(keyCode) || keyCode == 113 #f2
 
+	shouldDeleteAndRehook: (keyCode) ->
+		[8, 46].indexOf(keyCode)>=0 #backspace or delete
 
-findSelect2Container = (td) ->
-	$(td).find(".select2Element").select2 "container"
-
-getRendererFrom = (td) ->
-	findSelect2Container(td).data "renderer"
-
-saveRendererTo = (td, renderer) ->
-	findSelect2Container(td).data "renderer", renderer
+	shouldRehook: (keyCode) ->
+		[9, 33, 34, 35, 36, 37, 38, 39, 40, 13].indexOf(keyCode) == -1 #other non printable character
 
 createSelect2Renderer = (model, instance, td, row, col, prop, value, cellProperties) ->
-	if !getRendererFrom td
-		$(td).empty()
-		renderer = new model instance, td, row, col
-		renderer.createElements cellProperties.selectorData, value
-		saveRendererTo td, renderer
-	else
-		getRendererFrom(td).setValue value
+	$(td).empty()
+	renderer = new model instance, td, row, col
+	renderer.createElements cellProperties.selectorData, value
 	return td
 
 
@@ -126,9 +118,8 @@ Handsontable.Select2Renderer = (instance, td, row, col, prop, value, cellPropert
 	createSelect2Renderer Select2Renderer, instance, td, row, col, prop, value, cellProperties
 
 Handsontable.Select2Editor = (instance, td, row, col, prop, value, cellProperties) ->
-	instance.addHookOnce 'beforeKeyDown', getRendererFrom(td).beforeKeyDownHook
-	instance.addHookOnce 'afterSelection', () ->
-		instance.removeHook 'beforeKeyDown', getRendererFrom(td).beforeKeyDownHook #to avoid bug where beforeKeyDown is triggered when it is not current cell
+	editor = new Select2Editor instance, td
+	editor.addHookOnce()
 
 Handsontable.Select2Cell =
 	editor: Handsontable.Select2Editor

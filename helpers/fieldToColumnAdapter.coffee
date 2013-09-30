@@ -27,6 +27,7 @@ class MultiValueToColumnAdapter extends SelectorToColumnAdapter
 		column.selectorData = field.selectorData().map (item)->
 			id: item.id()
 			text: item.text()
+		column.width = 200
 		return column
 
 	@valueAccessor: (fieldName)=>

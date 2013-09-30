@@ -1,9 +1,8 @@
-var Select2Renderer, createSelect2Renderer, findSelect2Container, getRendererFrom, saveRendererTo,
+var Select2Editor, Select2Renderer, createSelect2Renderer,
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 Select2Renderer = (function() {
   function Select2Renderer(instance, td, row, col) {
-    this.beforeKeyDownHook = __bind(this.beforeKeyDownHook, this);
     this.returnPressed = __bind(this.returnPressed, this);
     this.exitKeys = __bind(this.exitKeys, this);
     this.instance = instance;
@@ -13,7 +12,6 @@ Select2Renderer = (function() {
   }
 
   Select2Renderer.prototype.defaultOptions = {
-    placeholder: "Select report type",
     allowClear: true,
     openOnEnter: false
   };
@@ -42,12 +40,7 @@ Select2Renderer = (function() {
     return this.bindOnSelecting();
   };
 
-  Select2Renderer.prototype.bindOnBlur = function() {
-    var _this = this;
-    return this.select2.on("select2-blur", function() {
-      return _this.saveData();
-    });
-  };
+  Select2Renderer.prototype.bindOnBlur = function() {};
 
   Select2Renderer.prototype.bindOnOpening = function() {
     var _this = this;
@@ -92,18 +85,6 @@ Select2Renderer = (function() {
     return this.finishEditing();
   };
 
-  Select2Renderer.prototype.shouldBeginEditing = function(keyCode) {
-    return Handsontable.helper.isPrintableChar(keyCode) || keyCode === 113;
-  };
-
-  Select2Renderer.prototype.shouldDeleteAndRehook = function(keyCode) {
-    return [8, 46].indexOf(keyCode) >= 0;
-  };
-
-  Select2Renderer.prototype.shouldRehook = function(keyCode) {
-    return [9, 33, 34, 35, 36, 37, 38, 39, 40, 13].indexOf(keyCode) === -1;
-  };
-
   Select2Renderer.prototype.finishEditing = function() {
     this.saveData();
     this.select2.select2("close");
@@ -133,11 +114,27 @@ Select2Renderer = (function() {
     return [[this.select2.select2("val")]];
   };
 
-  Select2Renderer.prototype.addHookOnce = function() {
-    return this.instance.addHookOnce('beforeKeyDown', this.beforeKeyDownHook);
+  return Select2Renderer;
+
+})();
+
+Select2Editor = (function() {
+  function Select2Editor(instance, td) {
+    this.beforeKeyDownHook = __bind(this.beforeKeyDownHook, this);
+    this.instance = instance;
+    this.td = td;
+    this.select2 = $(td).find(".select2Element").select2("container");
+  }
+
+  Select2Editor.prototype.addHookOnce = function() {
+    var _this = this;
+    this.instance.addHookOnce('beforeKeyDown', this.beforeKeyDownHook);
+    return this.instance.addHookOnce('afterSelection', function() {
+      return _this.instance.removeHook('beforeKeyDown', _this.beforeKeyDownHook);
+    });
   };
 
-  Select2Renderer.prototype.beforeKeyDownHook = function(event) {
+  Select2Editor.prototype.beforeKeyDownHook = function(event) {
     if (this.shouldBeginEditing(event.keyCode)) {
       event.stopImmediatePropagation();
       return this.beginEditing();
@@ -149,36 +146,31 @@ Select2Renderer = (function() {
     }
   };
 
-  Select2Renderer.prototype.beginEditing = function() {
+  Select2Editor.prototype.beginEditing = function() {
     return this.select2.select2("open");
   };
 
-  return Select2Renderer;
+  Select2Editor.prototype.shouldBeginEditing = function(keyCode) {
+    return Handsontable.helper.isPrintableChar(keyCode) || keyCode === 113;
+  };
+
+  Select2Editor.prototype.shouldDeleteAndRehook = function(keyCode) {
+    return [8, 46].indexOf(keyCode) >= 0;
+  };
+
+  Select2Editor.prototype.shouldRehook = function(keyCode) {
+    return [9, 33, 34, 35, 36, 37, 38, 39, 40, 13].indexOf(keyCode) === -1;
+  };
+
+  return Select2Editor;
 
 })();
 
-findSelect2Container = function(td) {
-  return $(td).find(".select2Element").select2("container");
-};
-
-getRendererFrom = function(td) {
-  return findSelect2Container(td).data("renderer");
-};
-
-saveRendererTo = function(td, renderer) {
-  return findSelect2Container(td).data("renderer", renderer);
-};
-
 createSelect2Renderer = function(model, instance, td, row, col, prop, value, cellProperties) {
   var renderer;
-  if (!getRendererFrom(td)) {
-    $(td).empty();
-    renderer = new model(instance, td, row, col);
-    renderer.createElements(cellProperties.selectorData, value);
-    saveRendererTo(td, renderer);
-  } else {
-    getRendererFrom(td).setValue(value);
-  }
+  $(td).empty();
+  renderer = new model(instance, td, row, col);
+  renderer.createElements(cellProperties.selectorData, value);
   return td;
 };
 
@@ -187,10 +179,9 @@ Handsontable.Select2Renderer = function(instance, td, row, col, prop, value, cel
 };
 
 Handsontable.Select2Editor = function(instance, td, row, col, prop, value, cellProperties) {
-  instance.addHookOnce('beforeKeyDown', getRendererFrom(td).beforeKeyDownHook);
-  return instance.addHookOnce('afterSelection', function() {
-    return instance.removeHook('beforeKeyDown', getRendererFrom(td).beforeKeyDownHook);
-  });
+  var editor;
+  editor = new Select2Editor(instance, td);
+  return editor.addHookOnce();
 };
 
 Handsontable.Select2Cell = {
