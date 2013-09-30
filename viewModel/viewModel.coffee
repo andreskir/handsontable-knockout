@@ -12,14 +12,20 @@ class Selector extends Field
 
   getSelectorPair: (prop,value)->
     @selectorData().filter((item)->item[prop]()==value)[0]
+
   getDisplayValue: ()->
     return "" if !@value()
     @getSelectorPair('id',@value()).text()
+
   setValue: (text)->
     if !text
       @value ""
     else
       @value @getSelectorPair('text',text).id()
+
+class MultiValue extends Selector
+  adapt: (runner)->
+    runner.adaptMultiValue @
 
 class Row
   constructor:(fieldsData,rowData)->

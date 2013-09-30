@@ -1,4 +1,4 @@
-var FieldToColumnAdapter, FieldToColumnAdapterRunner, FieldsToColumnsMapper, SelectorToColumnAdapter, _ref,
+var FieldToColumnAdapter, FieldToColumnAdapterRunner, FieldsToColumnsMapper, MultiValueToColumnAdapter, SelectorToColumnAdapter, _ref, _ref1,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -57,6 +57,39 @@ SelectorToColumnAdapter = (function(_super) {
 
 }).call(this, FieldToColumnAdapter);
 
+MultiValueToColumnAdapter = (function(_super) {
+  __extends(MultiValueToColumnAdapter, _super);
+
+  function MultiValueToColumnAdapter() {
+    _ref1 = MultiValueToColumnAdapter.__super__.constructor.apply(this, arguments);
+    return _ref1;
+  }
+
+  MultiValueToColumnAdapter.getColumnFor = function(field) {
+    var column;
+    column = MultiValueToColumnAdapter.__super__.constructor.getColumnFor.call(this, field);
+    column.selectorData = field.selectorData().map(function(item) {
+      return {
+        id: item.id(),
+        text: item.text()
+      };
+    });
+    return column;
+  };
+
+  MultiValueToColumnAdapter.valueAccessor = function(fieldName) {
+    return function(row, val) {
+      if (typeof val === 'undefined') {
+        return row.getFieldByName(fieldName).value();
+      }
+      return row.getFieldByName(fieldName).value(val);
+    };
+  };
+
+  return MultiValueToColumnAdapter;
+
+}).call(this, SelectorToColumnAdapter);
+
 FieldToColumnAdapterRunner = (function() {
   function FieldToColumnAdapterRunner() {}
 
@@ -66,6 +99,10 @@ FieldToColumnAdapterRunner = (function() {
 
   FieldToColumnAdapterRunner.prototype.adaptSelector = function(selector) {
     return SelectorToColumnAdapter.getColumnFor(selector);
+  };
+
+  FieldToColumnAdapterRunner.prototype.adaptMultiValue = function(multiValue) {
+    return MultiValueToColumnAdapter.getColumnFor(multiValue);
   };
 
   return FieldToColumnAdapterRunner;

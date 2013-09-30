@@ -21,12 +21,28 @@ class SelectorToColumnAdapter extends FieldToColumnAdapter
 			return row.getFieldByName(fieldName).getDisplayValue() if typeof val == 'undefined'
 			row.getFieldByName(fieldName).setValue val
 
+class MultiValueToColumnAdapter extends SelectorToColumnAdapter
+	@getColumnFor: (field)->
+		column = super field
+		column.selectorData = field.selectorData().map (item)->
+			id: item.id()
+			text: item.text()
+		return column
+
+	@valueAccessor: (fieldName)=>
+		(row,val)=>
+			return row.getFieldByName(fieldName).value() if typeof val == 'undefined'
+			row.getFieldByName(fieldName).value(val)
+
 class FieldToColumnAdapterRunner
 	adaptField: (field)->
 		FieldToColumnAdapter.getColumnFor field
 
 	adaptSelector: (selector)->
 		SelectorToColumnAdapter.getColumnFor selector
+
+	adaptMultiValue: (multiValue)->
+		MultiValueToColumnAdapter.getColumnFor multiValue
 
 class FieldsToColumnsMapper
 	@map: (fields)->
