@@ -1,14 +1,18 @@
 class FieldToColumnAdapter
 	@getColumnFor: (field)->
-		data: @valueAccessor(field.name()),
-		type: field.type(),
-		title: field.text(),
+		column =
+			data: @valueAccessor(field.name())
+			type: field.type()
+			title: field.text()
+		if field.hasPopup then column.renderer = HasPopupRenderer
+		column
 
 	@valueAccessor: (fieldName)->
 		(row, val)->
-			if row.isNewRow
-				return ""
-			return row.getFieldByName(fieldName).value() if typeof val == 'undefined'
+			if typeof val == 'undefined'
+				if row.isNewRow
+					return ""
+				return row.getFieldByName(fieldName).value() if typeof val == 'undefined'
 			row.getFieldByName(fieldName).value(val)
 
 class SelectorToColumnAdapter extends FieldToColumnAdapter

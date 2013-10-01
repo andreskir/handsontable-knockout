@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
   var fields = [{ name: 'title', type: 'text', text: "Plain text title", value: 'A', _type: "Field" },
-    { name: 'description', type: 'text', text: "HTML Description", value: 'B', _type: "Field" },
+    { name: 'description', type: 'text', text: "HTML Description", hasPopup:true, value: 'B', _type: "Field" },
     { name: 'cover', type: 'text', text: "Cover", value: null, _type: "Field" },
     { name: 'date', type: 'date', text: "Date", value: null, _type: "Field" },
     { name: 'country', type: 'autocomplete', text: "Country", value: null, _type: "Selector", selectorData: [{id:'AR',text:'Argentina'},{id:'BR',text:'Brasil'},{id:'CH',text:'Chile'},{id:'UY',text:'Uruguay'}] },

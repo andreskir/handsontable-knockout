@@ -5,12 +5,13 @@
 		<link rel="stylesheet" media="screen" href="http://ivaynberg.github.io/select2/select2-3.4.3/select2.css">
 		<script src="http://handsontable.com/dist/jquery.handsontable.full.js"></script>
     <script src="http://knockoutjs.com/downloads/knockout-2.3.0.js"></script>
-    <script src="https://rawgithub.com/SteveSanderson/knockout.mapping/master/build/output/knockout.mapping-latest.debug.js"></script>
+    <script src="lib/knockout.mapping-2.3.5.js"></script>
 		<link rel="stylesheet" media="screen" href="http://handsontable.com/dist/jquery.handsontable.full.css">
 		<script src="http://handsontable.com/lib/jquery-ui/js/jquery-ui.custom.min.js"></script>
 		<link rel="stylesheet" media="screen" href="http://handsontable.com/lib/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css">
 		<link rel="stylesheet" media="screen" href="http://handsontable.com/demo/css/samples.css">
-    <script src="select2Cell/multiValueRenderer.js"></script>
+    <script src="customCells/multiValueRenderer.js"></script>
+    <script src="customCells/hasPopupRenderer.js"></script>
     <script src="customBindings/handsontableBinding.js"></script>
     <script src="extensions/removeRow.js"></script>
     <script src="extensions/colMaxWidth.js"></script>
@@ -22,7 +23,31 @@
 		<style type="text/css">
 			body {background: white; margin: 20px;}
 			h2 {margin: 20px 0;}
-      #example1 {margin: 0 auto;}
+			#example1 {margin: 0 auto;}
+			.handsontable .hasPopup {
+			  position: relative;
+			  padding-right: 20px;
+			}
+
+			.handsontable .hasPopupGlass {
+				background-image: url(Content/search.png);
+				background-color: white;
+				position: absolute;
+				top: 5;
+				right: 0;
+				font-size: 10px;
+				color: #EEE;
+				cursor: default;
+				width: 12px;
+				text-align: center;
+				height: 14px;
+				cursor:pointer;
+			}
+
+			.handsontable td .hasPopupGlass:hover {
+			  color: #777;
+			}
+
 		</style>
 	</head>
 	<body>

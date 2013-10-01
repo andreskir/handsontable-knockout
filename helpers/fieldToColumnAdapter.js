@@ -6,20 +6,27 @@ FieldToColumnAdapter = (function() {
   function FieldToColumnAdapter() {}
 
   FieldToColumnAdapter.getColumnFor = function(field) {
-    return {
+    var column;
+    column = {
       data: this.valueAccessor(field.name()),
       type: field.type(),
       title: field.text()
     };
+    if (field.hasPopup) {
+      column.renderer = HasPopupRenderer;
+    }
+    return column;
   };
 
   FieldToColumnAdapter.valueAccessor = function(fieldName) {
     return function(row, val) {
-      if (row.isNewRow) {
-        return "";
-      }
       if (typeof val === 'undefined') {
-        return row.getFieldByName(fieldName).value();
+        if (row.isNewRow) {
+          return "";
+        }
+        if (typeof val === 'undefined') {
+          return row.getFieldByName(fieldName).value();
+        }
       }
       return row.getFieldByName(fieldName).value(val);
     };
