@@ -4,8 +4,8 @@ $(document).ready(function () {
     { name: 'description', text: "HTML Description", hasPopup:true, value: 'B', _type: "Field" },
     { name: 'cover', text: "Cover", value: null, _type: "Field" },
     { name: 'date', text: "Date", value: null, _type: "DatePicker" },
-    { name: 'country', text: "Country", value: null, _type: "Selector", selectorData: [{id:'AR',description:'Argentina'},{id:'BR',description:'Brasil'},{id:'CH',description:'Chile'},{id:'UY',description:'Uruguay'}] },
-    { name: 'authors', text: "Authors", value: null, _type: "MultiValue", selectorData: [{id:'CP',description:'Charles Perez'},{id:'NG',description:'Nick Gomez'},{id:'WW',description:'Walter White'},{id:'ER',description:'Edward Rodriguez'}] },
+    { name: 'country', text: "Country", value: null, _type: "Selector", selectorData: [{id:null,description:''},{id:'AR',description:'Argentina'},{id:'BR',description:'Brasil'},{id:'CH',description:'Chile'},{id:'UY',description:'Uruguay'}] },
+    { name: 'authors', text: "Authors", value: null, _type: "MultiValue", selectorData: [{id:null,description:''},{id:'CP',description:'Charles Perez'},{id:'NG',description:'Nick Gomez'},{id:'WW',description:'Walter White'},{id:'ER',description:'Edward Rodriguez'}] },
     { name: 'notes', text: "Notes", value: null, _type: "Field" },
   ];
 

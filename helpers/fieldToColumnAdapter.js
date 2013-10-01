@@ -67,7 +67,9 @@ SelectorToColumnAdapter = (function(_super) {
     var column;
     column = SelectorToColumnAdapter.__super__.constructor.getColumnFor.call(this, field);
     column.type = "autocomplete";
-    column.source = field.selectorPairs().map(function(item) {
+    column.source = field.selectorPairs().filter(function(item) {
+      return item.id;
+    }).map(function(item) {
       return item.description;
     });
     column.strict = true;
@@ -99,7 +101,9 @@ MultiValueToColumnAdapter = (function(_super) {
     var column;
     column = MultiValueToColumnAdapter.__super__.constructor.getColumnFor.call(this, field);
     column.type = "multiValue";
-    column.selectorData = field.selectorPairs().map(function(item) {
+    column.selectorData = field.selectorPairs().filter(function(item) {
+      return item.id;
+    }).map(function(item) {
       return {
         id: item.id,
         text: item.description
