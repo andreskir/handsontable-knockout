@@ -25,7 +25,7 @@ class SelectorToColumnAdapter extends FieldToColumnAdapter
 	@getColumnFor: (field)->
 		column = super field
 		column.type = "autocomplete"
-		column.source = field.selectorPairs().map (item)->item.text()
+		column.source = field.selectorPairs().map (item)->item.description
 		column.strict = true
 		return column
 
@@ -39,8 +39,8 @@ class MultiValueToColumnAdapter extends SelectorToColumnAdapter
 		column = super field
 		column.type = "multiValue"
 		column.selectorData = field.selectorPairs().map (item)->
-			id: item.id()
-			text: item.text()
+			id: item.id
+			text: item.description
 		column.width = 200
 		return column
 

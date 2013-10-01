@@ -68,7 +68,7 @@ SelectorToColumnAdapter = (function(_super) {
     column = SelectorToColumnAdapter.__super__.constructor.getColumnFor.call(this, field);
     column.type = "autocomplete";
     column.source = field.selectorPairs().map(function(item) {
-      return item.text();
+      return item.description;
     });
     column.strict = true;
     return column;
@@ -101,8 +101,8 @@ MultiValueToColumnAdapter = (function(_super) {
     column.type = "multiValue";
     column.selectorData = field.selectorPairs().map(function(item) {
       return {
-        id: item.id(),
-        text: item.text()
+        id: item.id,
+        text: item.description
       };
     });
     column.width = 200;

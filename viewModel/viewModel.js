@@ -1,11 +1,12 @@
-var DatePicker, Field, InputGrid, MultiValue, Row, Selector, _ref, _ref1, _ref2,
+var DatePicker, Field, InputGrid, MultiValue, Row, Selector, _ref, _ref1,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
 Field = (function() {
-  function Field(data, val) {
-    ko.mapping.fromJS(data, {}, this);
+  function Field(data, val, mappingOptions) {
+    mappingOptions = $.extend({}, mappingOptions);
+    ko.mapping.fromJS(data, mappingOptions, this);
     if (typeof val !== 'undefined') {
       this.value(val);
     }
@@ -39,18 +40,25 @@ DatePicker = (function(_super) {
 Selector = (function(_super) {
   __extends(Selector, _super);
 
-  function Selector() {
-    _ref1 = Selector.__super__.constructor.apply(this, arguments);
-    return _ref1;
+  function Selector(data, val) {
+    var mappingOptions;
+    mappingOptions = {
+      copy: ["selectorData"]
+    };
+    Selector.__super__.constructor.call(this, data, val, mappingOptions);
   }
 
   Selector.prototype.adapt = function(runner) {
     return runner.adaptSelector(this);
   };
 
+  Selector.prototype.selectorPairs = function() {
+    return this.selectorData;
+  };
+
   Selector.prototype.getSelectorPair = function(prop, value) {
     return this.selectorPairs().filter(function(item) {
-      return item[prop]() === value;
+      return item[prop] === value;
     })[0];
   };
 
@@ -58,14 +66,14 @@ Selector = (function(_super) {
     if (!this.value()) {
       return "";
     }
-    return this.getSelectorPair('id', this.value()).text();
+    return this.getSelectorPair('id', this.value()).description;
   };
 
-  Selector.prototype.setValue = function(text) {
-    if (!text) {
+  Selector.prototype.setValue = function(description) {
+    if (!description) {
       return this.value("");
     } else {
-      return this.value(this.getSelectorPair('text', text).id());
+      return this.value(this.getSelectorPair('description', description).id);
     }
   };
 
@@ -77,8 +85,8 @@ MultiValue = (function(_super) {
   __extends(MultiValue, _super);
 
   function MultiValue() {
-    _ref2 = MultiValue.__super__.constructor.apply(this, arguments);
-    return _ref2;
+    _ref1 = MultiValue.__super__.constructor.apply(this, arguments);
+    return _ref1;
   }
 
   MultiValue.prototype.adapt = function(runner) {

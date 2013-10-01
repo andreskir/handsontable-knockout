@@ -1,8 +1,10 @@
 class Field
-  constructor:(data,val)->
-    ko.mapping.fromJS data, {}, this
+  constructor:(data,val,mappingOptions)->
+    mappingOptions = $.extend {}, mappingOptions
+    ko.mapping.fromJS data, mappingOptions, this
     @value(val) if typeof val != 'undefined'
     delete @__ko_mapping__
+
   adapt: (runner)->
     runner.adaptField @
 
@@ -11,21 +13,29 @@ class DatePicker extends Field
     runner.adaptDatePicker @
 
 class Selector extends Field
+  constructor: (data,val)->
+    mappingOptions =
+      copy: ["selectorData"]
+    super data,val,mappingOptions
+
   adapt: (runner)->
     runner.adaptSelector @
 
+  selectorPairs: ()->
+    @selectorData
+
   getSelectorPair: (prop,value)->
-    @selectorPairs().filter((item)->item[prop]()==value)[0]
+    @selectorPairs().filter((item)->item[prop]==value)[0]
 
   getDisplayValue: ()->
     return "" if !@value()
-    @getSelectorPair('id',@value()).text()
+    @getSelectorPair('id',@value()).description
 
-  setValue: (text)->
-    if !text
+  setValue: (description)->
+    if !description
       @value ""
     else
-      @value @getSelectorPair('text',text).id()
+      @value @getSelectorPair('description',description).id
 
 class MultiValue extends Selector
   adapt: (runner)->
