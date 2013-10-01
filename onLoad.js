@@ -10,27 +10,27 @@ $(document).ready(function () {
   ];
 
   var data = [
-    {
-      title: "Professional JavaScript for Web Developers",
-      description: "",
-      cover: "http://ecx.images-amazon.com/images/I/51bRhyVTVGL._SL50_.jpg",
-      country: "BR",
-      authors: ["CP"]
-    },
-    {
-      title: "JavaScript: The Good Parts",
-      description: "",
-      cover: "http://ecx.images-amazon.com/images/I/51gdVAEfPUL._SL50_.jpg",
-      country: "UY",
-      authors: ["NG"]
-    },
-    {
-      title: "JavaScript: The Definitive Guide",
-      description: "",
-      cover: "http://ecx.images-amazon.com/images/I/51VFNL4T7kL._SL50_.jpg",
-      country: "AR",
-      authors: ["ER"]
-    }
+    // {
+    //   title: "Professional JavaScript for Web Developers",
+    //   description: "",
+    //   cover: "http://ecx.images-amazon.com/images/I/51bRhyVTVGL._SL50_.jpg",
+    //   country: "BR",
+    //   authors: ["CP"]
+    // },
+    // {
+    //   title: "JavaScript: The Good Parts",
+    //   description: "",
+    //   cover: "http://ecx.images-amazon.com/images/I/51gdVAEfPUL._SL50_.jpg",
+    //   country: "UY",
+    //   authors: ["NG"]
+    // },
+    // {
+    //   title: "JavaScript: The Definitive Guide",
+    //   description: "",
+    //   cover: "http://ecx.images-amazon.com/images/I/51VFNL4T7kL._SL50_.jpg",
+    //   country: "AR",
+    //   authors: ["ER"]
+    // }
   ];
 
   inputGrid = new InputGrid(fields, data);
