@@ -6,6 +6,10 @@ class Field
   adapt: (runner)->
     runner.adaptField @
 
+class DatePicker extends Field
+  adapt: (runner)->
+    runner.adaptDatePicker @
+
 class Selector extends Field
   adapt: (runner)->
     runner.adaptSelector @

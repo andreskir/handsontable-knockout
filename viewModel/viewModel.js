@@ -1,4 +1,4 @@
-var Field, InputGrid, MultiValue, Row, Selector, _ref, _ref1,
+var DatePicker, Field, InputGrid, MultiValue, Row, Selector, _ref, _ref1, _ref2,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -20,12 +20,28 @@ Field = (function() {
 
 })();
 
+DatePicker = (function(_super) {
+  __extends(DatePicker, _super);
+
+  function DatePicker() {
+    _ref = DatePicker.__super__.constructor.apply(this, arguments);
+    return _ref;
+  }
+
+  DatePicker.prototype.adapt = function(runner) {
+    return runner.adaptDatePicker(this);
+  };
+
+  return DatePicker;
+
+})(Field);
+
 Selector = (function(_super) {
   __extends(Selector, _super);
 
   function Selector() {
-    _ref = Selector.__super__.constructor.apply(this, arguments);
-    return _ref;
+    _ref1 = Selector.__super__.constructor.apply(this, arguments);
+    return _ref1;
   }
 
   Selector.prototype.adapt = function(runner) {
@@ -61,8 +77,8 @@ MultiValue = (function(_super) {
   __extends(MultiValue, _super);
 
   function MultiValue() {
-    _ref1 = MultiValue.__super__.constructor.apply(this, arguments);
-    return _ref1;
+    _ref2 = MultiValue.__super__.constructor.apply(this, arguments);
+    return _ref2;
   }
 
   MultiValue.prototype.adapt = function(runner) {
