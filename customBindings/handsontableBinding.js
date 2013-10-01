@@ -25,16 +25,6 @@ ko.bindingHandlers.handsontable = {
           }
         }
       },
-      afterRender: function(){
-        var totalWidth = 100; //rowHeader
-        for(var i=0;i<this.countCols();i++){
-          totalWidth += this.getColWidth(i);
-        }
-        $(this.rootElement).css('width', totalWidth);
-      },
-      afterInit: function () {
-        $(this.rootElement).css('overflow', 'hidden');
-      },
       width: 900
     });
   },
