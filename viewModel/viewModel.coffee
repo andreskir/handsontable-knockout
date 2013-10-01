@@ -15,7 +15,7 @@ class Selector extends Field
     runner.adaptSelector @
 
   getSelectorPair: (prop,value)->
-    @selectorData().filter((item)->item[prop]()==value)[0]
+    @selectorPairs().filter((item)->item[prop]()==value)[0]
 
   getDisplayValue: ()->
     return "" if !@value()

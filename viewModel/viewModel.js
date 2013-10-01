@@ -49,7 +49,7 @@ Selector = (function(_super) {
   };
 
   Selector.prototype.getSelectorPair = function(prop, value) {
-    return this.selectorData().filter(function(item) {
+    return this.selectorPairs().filter(function(item) {
       return item[prop]() === value;
     })[0];
   };
