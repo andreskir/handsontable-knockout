@@ -38,12 +38,9 @@ $(document).ready(function () {
   ];
 
   inputGrid = new InputGrid(fields, data);
-  ko.applyBindings(inputGrid);
 
   inputGrid.getFieldByName('country').selectorData = countries;
   inputGrid.getFieldByName('authors').selectorData = authors;
 
-  $("#dump").click(function(){
-    $("#example1").handsontable("getData").forEach(function(item){console.log(item.select2);});
-  });
+  ko.applyBindings(inputGrid);
 });
