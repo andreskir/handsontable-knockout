@@ -8,6 +8,8 @@ class Field
   adapt: (runner)->
     runner.adaptField @
 
+  hasPopup: ()->
+
 class DatePicker extends Field
   adapt: (runner)->
     runner.adaptDatePicker @

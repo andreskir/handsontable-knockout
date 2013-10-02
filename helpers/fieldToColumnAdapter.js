@@ -12,7 +12,7 @@ FieldToColumnAdapter = (function() {
       type: "text",
       title: field.text()
     };
-    if (field.hasPopup) {
+    if (field.hasPopup()) {
       column.renderer = HasPopupRenderer;
     }
     return column;

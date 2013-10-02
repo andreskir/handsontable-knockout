@@ -17,6 +17,8 @@ Field = (function() {
     return runner.adaptField(this);
   };
 
+  Field.prototype.hasPopup = function() {};
+
   return Field;
 
 })();

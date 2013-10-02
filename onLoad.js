@@ -4,7 +4,7 @@ $(document).ready(function () {
   authors = [{id:null,description:''},{id:'CP',description:'Charles Perez'},{id:'NG',description:'Nick Gomez'},{id:'WW',description:'Walter White'},{id:'ER',description:'Edward Rodriguez'}];
 
   var fields = [{ name: 'title', text: "Plain text title", value: 'A', _type: "Field" },
-    { name: 'description', text: "HTML Description", hasPopup:true, value: 'B', _type: "Field" },
+    { name: 'description', text: "HTML Description", hasPopup: function(){return true}, value: 'B', _type: "Field" },
     { name: 'cover', text: "Cover", value: null, _type: "Field" },
     { name: 'date', text: "Date", value: null, _type: "DatePicker" },
     { name: 'country', text: "Country", value: null, _type: "Selector", selectorData: [] },
