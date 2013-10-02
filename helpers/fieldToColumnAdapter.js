@@ -67,11 +67,13 @@ SelectorToColumnAdapter = (function(_super) {
     var column;
     column = SelectorToColumnAdapter.__super__.constructor.getColumnFor.call(this, field);
     column.type = "autocomplete";
-    column.source = field.selectorPairs().filter(function(item) {
-      return item.id;
-    }).map(function(item) {
-      return item.description;
-    });
+    column.getSourceAt = function(row) {
+      return row.getFieldByName(field.name()).selectorPairs().filter(function(item) {
+        return item.id;
+      }).map(function(item) {
+        return item.description;
+      });
+    };
     column.strict = true;
     return column;
   };

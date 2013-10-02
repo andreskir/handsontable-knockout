@@ -72,8 +72,15 @@ class InputGrid
   newRowTemplate: ()=>
     row = new Row(@fieldsData,{})
     row.isNewRow = true
+    @fields().forEach (field)->
+      if(field.selectorData)
+        row.getFieldByName(field.name()).selectorData = field.selectorData
     row
 
   dataMatrix: ()->
     @rows().map (row)->
       row.fields().map (field)-> field.value()
+
+  getFieldByName: (name)->
+    @fields().filter((field)->field.name()==name)[0]
+

@@ -25,7 +25,8 @@ class SelectorToColumnAdapter extends FieldToColumnAdapter
 	@getColumnFor: (field)->
 		column = super field
 		column.type = "autocomplete"
-		column.source = field.selectorPairs().filter((item)->item.id).map (item)->item.description
+		column.getSourceAt = (row)->
+			row.getFieldByName(field.name()).selectorPairs().filter((item)->item.id).map (item)->item.description
 		column.strict = true
 		return column
 

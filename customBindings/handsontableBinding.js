@@ -25,6 +25,10 @@ ko.bindingHandlers.handsontable = {
           }
         }
       },
+      cells: function(row,col,prop){
+        if(this.getSourceAt)
+          this.source = this.getSourceAt(options.data()[row]);
+      },
       width: 900
     });
   },

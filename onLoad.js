@@ -1,13 +1,17 @@
 $(document).ready(function () {
 
+  countries = [{id:null,description:''},{id:'AR',description:'Argentina'},{id:'BR',description:'Brasil'},{id:'CH',description:'Chile'},{id:'UY',description:'Uruguay'}];
+  authors = [{id:null,description:''},{id:'CP',description:'Charles Perez'},{id:'NG',description:'Nick Gomez'},{id:'WW',description:'Walter White'},{id:'ER',description:'Edward Rodriguez'}];
+
   var fields = [{ name: 'title', text: "Plain text title", value: 'A', _type: "Field" },
     { name: 'description', text: "HTML Description", hasPopup:true, value: 'B', _type: "Field" },
     { name: 'cover', text: "Cover", value: null, _type: "Field" },
     { name: 'date', text: "Date", value: null, _type: "DatePicker" },
-    { name: 'country', text: "Country", value: null, _type: "Selector", selectorData: [{id:null,description:''},{id:'AR',description:'Argentina'},{id:'BR',description:'Brasil'},{id:'CH',description:'Chile'},{id:'UY',description:'Uruguay'}] },
-    { name: 'authors', text: "Authors", value: null, _type: "MultiValue", selectorData: [{id:null,description:''},{id:'CP',description:'Charles Perez'},{id:'NG',description:'Nick Gomez'},{id:'WW',description:'Walter White'},{id:'ER',description:'Edward Rodriguez'}] },
+    { name: 'country', text: "Country", value: null, _type: "Selector", selectorData: [] },
+    { name: 'authors', text: "Authors", value: null, _type: "MultiValue", selectorData: [] },
     { name: 'notes', text: "Notes", value: null, _type: "Field" },
   ];
+
 
   var data = [
     // {
@@ -35,6 +39,9 @@ $(document).ready(function () {
 
   inputGrid = new InputGrid(fields, data);
   ko.applyBindings(inputGrid);
+
+  inputGrid.getFieldByName('country').selectorData = countries;
+  inputGrid.getFieldByName('authors').selectorData = authors;
 
   $("#dump").click(function(){
     $("#example1").handsontable("getData").forEach(function(item){console.log(item.select2);});

@@ -151,6 +151,11 @@ InputGrid = (function() {
     var row;
     row = new Row(this.fieldsData, {});
     row.isNewRow = true;
+    this.fields().forEach(function(field) {
+      if (field.selectorData) {
+        return row.getFieldByName(field.name()).selectorData = field.selectorData;
+      }
+    });
     return row;
   };
 
@@ -160,6 +165,12 @@ InputGrid = (function() {
         return field.value();
       });
     });
+  };
+
+  InputGrid.prototype.getFieldByName = function(name) {
+    return this.fields().filter(function(field) {
+      return field.name() === name;
+    })[0];
   };
 
   return InputGrid;
