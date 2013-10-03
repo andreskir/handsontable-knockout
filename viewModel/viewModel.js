@@ -119,6 +119,7 @@ Row = (function() {
 InputGrid = (function() {
   function InputGrid(fieldsData, data) {
     this.newRowTemplate = __bind(this.newRowTemplate, this);
+    var _this = this;
     this.fieldsData = fieldsData;
     this.fields = ko.observableArray(fieldsData.map(function(field) {
       return new window[field._type](field);
@@ -126,6 +127,11 @@ InputGrid = (function() {
     this.rows = ko.observableArray(data.map(function(row) {
       return new Row(fieldsData, row);
     }));
+    this.visibleFields = ko.computed(function() {
+      return _this.fields().filter(function(field) {
+        return field.visible();
+      });
+    });
   }
 
   InputGrid.prototype.setDateAsFirstTitle = function() {

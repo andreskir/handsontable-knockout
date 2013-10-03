@@ -74,5 +74,3 @@ class FieldsToColumnsMapper
 	@map: (fields)->
 		fields.map (field)->
 			field.adapt new FieldToColumnAdapterRunner()
-
-

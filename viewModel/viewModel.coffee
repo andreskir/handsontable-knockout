@@ -58,6 +58,7 @@ class InputGrid
       new window[field._type](field)
     @rows = ko.observableArray data.map (row)->
       new Row(fieldsData,row)
+    @visibleFields = ko.computed ()=>@fields().filter (field)->field.visible()
 
   setDateAsFirstTitle: ()->
     @rows()[0].getFieldByName('title').value new Date()
