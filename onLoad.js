@@ -7,8 +7,8 @@ $(document).ready(function () {
     { name: 'description', text: "HTML Description", hasPopup: function(){return true}, value: 'B', _type: "Field" },
     { name: 'cover', text: "Cover", value: null, _type: "Field" },
     { name: 'date', text: "Date", value: null, _type: "DatePicker" },
-    { name: 'country', text: "Country", value: null, _type: "Selector", selectorData: [] },
-    { name: 'authors', text: "Authors", value: null, _type: "MultiValue", selectorData: [] },
+    { name: 'country', text: "Country", value: 'AR', _type: "Selector", selectorData: [] },
+    { name: 'authors', text: "Authors", value: ["WW"], _type: "MultiValue", selectorData: [] },
     { name: 'notes', text: "Notes", value: null, _type: "Field" },
   ];
 

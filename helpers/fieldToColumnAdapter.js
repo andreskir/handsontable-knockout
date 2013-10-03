@@ -5,7 +5,7 @@ var DatePickerToColumnAdapter, FieldToColumnAdapter, FieldToColumnAdapterRunner,
 FieldToColumnAdapter = (function() {
   function FieldToColumnAdapter() {}
 
-  FieldToColumnAdapter.getColumnFor = function(field) {
+  FieldToColumnAdapter.prototype.getColumnFor = function(field) {
     var column;
     column = {
       data: this.valueAccessor(field.name()),
@@ -18,18 +18,25 @@ FieldToColumnAdapter = (function() {
     return column;
   };
 
-  FieldToColumnAdapter.valueAccessor = function(fieldName) {
+  FieldToColumnAdapter.prototype.valueAccessor = function(fieldName) {
+    var _this = this;
     return function(row, val) {
       if (typeof val === 'undefined') {
         if (row.isNewRow) {
           return "";
         }
-        if (typeof val === 'undefined') {
-          return row.getFieldByName(fieldName).value();
-        }
+        return _this.getter(row.getFieldByName(fieldName));
       }
-      return row.getFieldByName(fieldName).value(val);
+      return _this.setter(row.getFieldByName(fieldName), val);
     };
+  };
+
+  FieldToColumnAdapter.prototype.getter = function(field) {
+    return field.value();
+  };
+
+  FieldToColumnAdapter.prototype.setter = function(field, val) {
+    return field.value(val);
   };
 
   return FieldToColumnAdapter;
@@ -44,9 +51,9 @@ DatePickerToColumnAdapter = (function(_super) {
     return _ref;
   }
 
-  DatePickerToColumnAdapter.getColumnFor = function(field) {
+  DatePickerToColumnAdapter.prototype.getColumnFor = function(field) {
     var column;
-    column = DatePickerToColumnAdapter.__super__.constructor.getColumnFor.call(this, field);
+    column = DatePickerToColumnAdapter.__super__.getColumnFor.call(this, field);
     column.type = "date";
     return column;
   };
@@ -63,9 +70,9 @@ SelectorToColumnAdapter = (function(_super) {
     return _ref1;
   }
 
-  SelectorToColumnAdapter.getColumnFor = function(field) {
+  SelectorToColumnAdapter.prototype.getColumnFor = function(field) {
     var column;
-    column = SelectorToColumnAdapter.__super__.constructor.getColumnFor.call(this, field);
+    column = SelectorToColumnAdapter.__super__.getColumnFor.call(this, field);
     column.type = "autocomplete";
     column.getSourceAt = function(row) {
       return row.getFieldByName(field.name()).selectorPairs().filter(function(item) {
@@ -78,18 +85,30 @@ SelectorToColumnAdapter = (function(_super) {
     return column;
   };
 
-  SelectorToColumnAdapter.valueAccessor = function(fieldName) {
+  SelectorToColumnAdapter.prototype.valueAccessor = function(fieldName) {
+    var _this = this;
     return function(row, val) {
       if (typeof val === 'undefined') {
-        return row.getFieldByName(fieldName).getDisplayValue();
+        if (row.isNewRow) {
+          return "";
+        }
+        return _this.getter1(row.getFieldByName(fieldName));
       }
-      return row.getFieldByName(fieldName).setValue(val);
+      return _this.setter1(row.getFieldByName(fieldName), val);
     };
+  };
+
+  SelectorToColumnAdapter.prototype.getter1 = function(selector) {
+    return selector.getDisplayValue();
+  };
+
+  SelectorToColumnAdapter.prototype.setter1 = function(selector, val) {
+    return selector.setValue(val);
   };
 
   return SelectorToColumnAdapter;
 
-}).call(this, FieldToColumnAdapter);
+})(FieldToColumnAdapter);
 
 MultiValueToColumnAdapter = (function(_super) {
   __extends(MultiValueToColumnAdapter, _super);
@@ -99,9 +118,9 @@ MultiValueToColumnAdapter = (function(_super) {
     return _ref2;
   }
 
-  MultiValueToColumnAdapter.getColumnFor = function(field) {
+  MultiValueToColumnAdapter.prototype.getColumnFor = function(field) {
     var column;
-    column = MultiValueToColumnAdapter.__super__.constructor.getColumnFor.call(this, field);
+    column = MultiValueToColumnAdapter.__super__.getColumnFor.call(this, field);
     column.type = "multiValue";
     column.selectorData = field.selectorPairs().filter(function(item) {
       return item.id;
@@ -115,36 +134,27 @@ MultiValueToColumnAdapter = (function(_super) {
     return column;
   };
 
-  MultiValueToColumnAdapter.valueAccessor = function(fieldName) {
-    return function(row, val) {
-      if (typeof val === 'undefined') {
-        return row.getFieldByName(fieldName).value();
-      }
-      return row.getFieldByName(fieldName).value(val);
-    };
-  };
-
   return MultiValueToColumnAdapter;
 
-}).call(this, SelectorToColumnAdapter);
+})(FieldToColumnAdapter);
 
 FieldToColumnAdapterRunner = (function() {
   function FieldToColumnAdapterRunner() {}
 
   FieldToColumnAdapterRunner.prototype.adaptField = function(field) {
-    return FieldToColumnAdapter.getColumnFor(field);
+    return new FieldToColumnAdapter().getColumnFor(field);
   };
 
   FieldToColumnAdapterRunner.prototype.adaptDatePicker = function(datePicker) {
-    return DatePickerToColumnAdapter.getColumnFor(datePicker);
+    return new DatePickerToColumnAdapter().getColumnFor(datePicker);
   };
 
   FieldToColumnAdapterRunner.prototype.adaptSelector = function(selector) {
-    return SelectorToColumnAdapter.getColumnFor(selector);
+    return new SelectorToColumnAdapter().getColumnFor(selector);
   };
 
   FieldToColumnAdapterRunner.prototype.adaptMultiValue = function(multiValue) {
-    return MultiValueToColumnAdapter.getColumnFor(multiValue);
+    return new MultiValueToColumnAdapter().getColumnFor(multiValue);
   };
 
   return FieldToColumnAdapterRunner;

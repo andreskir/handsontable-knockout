@@ -1,5 +1,5 @@
 class FieldToColumnAdapter
-	@getColumnFor: (field)->
+	getColumnFor: (field)->
 		column =
 			data: @valueAccessor(field.name())
 			type: "text"
@@ -7,22 +7,26 @@ class FieldToColumnAdapter
 		if field.hasPopup() then column.renderer = HasPopupRenderer
 		column
 
-	@valueAccessor: (fieldName)->
-		(row, val)->
+	valueAccessor: (fieldName)->
+		(row,val)=>
 			if typeof val == 'undefined'
-				if row.isNewRow
-					return ""
-				return row.getFieldByName(fieldName).value() if typeof val == 'undefined'
-			row.getFieldByName(fieldName).value(val)
+				return "" if row.isNewRow
+				return @getter row.getFieldByName(fieldName)
+			@setter row.getFieldByName(fieldName),val
+
+	getter: (field)->
+		field.value()
+	setter: (field,val)->
+		field.value val
 
 class DatePickerToColumnAdapter extends FieldToColumnAdapter
-	@getColumnFor: (field)->
+	getColumnFor: (field)->
 		column = super field
 		column.type = "date"
 		return column
 
 class SelectorToColumnAdapter extends FieldToColumnAdapter
-	@getColumnFor: (field)->
+	getColumnFor: (field)->
 		column = super field
 		column.type = "autocomplete"
 		column.getSourceAt = (row)->
@@ -30,13 +34,21 @@ class SelectorToColumnAdapter extends FieldToColumnAdapter
 		column.strict = true
 		return column
 
-	@valueAccessor: (fieldName)=>
+	#es muy loco pero si heredo el valueAccessor del super y sobrescribo el getter y el setter anda mal y no tira ningún error.
+	valueAccessor: (fieldName)->
 		(row,val)=>
-			return row.getFieldByName(fieldName).getDisplayValue() if typeof val == 'undefined'
-			row.getFieldByName(fieldName).setValue val
+			if typeof val == 'undefined'
+				return "" if row.isNewRow
+				return @getter1 row.getFieldByName(fieldName)
+			@setter1 row.getFieldByName(fieldName),val
 
-class MultiValueToColumnAdapter extends SelectorToColumnAdapter
-	@getColumnFor: (field)->
+	getter1: (selector)->
+		selector.getDisplayValue()
+	setter1: (selector,val)->
+		selector.setValue val
+
+class MultiValueToColumnAdapter extends FieldToColumnAdapter
+	getColumnFor: (field)->
 		column = super field
 		column.type = "multiValue"
 		column.selectorData = field.selectorPairs().filter((item)->item.id).map (item)->
@@ -45,23 +57,18 @@ class MultiValueToColumnAdapter extends SelectorToColumnAdapter
 		column.width = 200
 		return column
 
-	@valueAccessor: (fieldName)=>
-		(row,val)=>
-			return row.getFieldByName(fieldName).value() if typeof val == 'undefined'
-			row.getFieldByName(fieldName).value(val)
-
 class FieldToColumnAdapterRunner
 	adaptField: (field)->
-		FieldToColumnAdapter.getColumnFor field
+		new FieldToColumnAdapter().getColumnFor field
 
 	adaptDatePicker: (datePicker)->
-		DatePickerToColumnAdapter.getColumnFor datePicker
+		new DatePickerToColumnAdapter().getColumnFor datePicker
 
 	adaptSelector: (selector)->
-		SelectorToColumnAdapter.getColumnFor selector
+		new SelectorToColumnAdapter().getColumnFor selector
 
 	adaptMultiValue: (multiValue)->
-		MultiValueToColumnAdapter.getColumnFor multiValue
+		new MultiValueToColumnAdapter().getColumnFor multiValue
 
 class FieldsToColumnsMapper
 	@map: (fields)->
