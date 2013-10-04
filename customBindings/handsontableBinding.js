@@ -16,14 +16,8 @@ ko.bindingHandlers.handsontable = {
       afterCreateRow: function () {
         options.data.notifySubscribers();
       },
-      beforeChange: function (changes, source) {
-        if (source == 'edit') {
-          var newValue = changes[0][3];
-          if (newValue) {
-            var row = changes[0][0];
-            options.markRowAsOld(options.data()[row]);
-          }
-        }
+      isEmptyRow: function(row){
+        return options.data()[row].isNewRow;
       },
       cells: function(row,col,prop){
         if(this.getSourceAt)
@@ -34,8 +28,12 @@ ko.bindingHandlers.handsontable = {
     });
   },
   update: function (element, valueAccessor) {
-    var dummy = valueAccessor().data().length;
-    $(element).handsontable("getInstance").render();
+    var options = valueAccessor();
+    var dummy = options.data().length;
+    var instance = $(element).handsontable("getInstance");
+    if(options.allowAdd && !instance.isEmptyRow(instance.countVisibleRows()-1))
+      instance.alter('insert_row',0,-1); //hack para que internamente ejecute adjustRowsAndCols y se de cuenta que tiene que agregar una fila
+    instance.render();
   }
 };
 

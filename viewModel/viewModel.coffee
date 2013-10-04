@@ -69,8 +69,8 @@ class InputGrid
       new Row(fieldsData,row)
     @visibleFields = ko.computed ()=>@fields().filter (field)->field.visible()
 
-  setDateAsFirstTitle: ()->
-    @rows()[0].getFieldByName('title').value new Date()
+  setTodayInFirstRow: ()->
+    @rows()[0].getFieldByName('date').value new Date()
 
   setAllCountriesAR: ()->
     @realRows().forEach (row)->row.getFieldByName('country').value 'AR'
@@ -86,6 +86,12 @@ class InputGrid
     @fields().forEach (field)->
       if(field.selectorData)
         row.getFieldByName(field.name()).selectorData = field.selectorData
+    row.fields().forEach (field)=>
+      field.valueChanged = field.value.subscribe =>
+        row.isNewRow = false
+        row.fields().forEach (otherField)->
+          otherField.valueChanged.dispose()
+        @rows.notifySubscribers()
     row
 
   dataMatrix: ()->
@@ -96,5 +102,7 @@ class InputGrid
     @fields().filter((field)->field.name()==name)[0]
 
   toggleInputHelper: (row,col)=>
-    @rows()[row].visibleFields()[col].callPopup(row)
+    @rows()[row].visibleFields()[0].value('X')
+    @rows()[row].visibleFields()[1].value('Y')
+    @rows()[row].visibleFields()[2].value('Z')
 

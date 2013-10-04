@@ -151,8 +151,8 @@ InputGrid = (function() {
     });
   }
 
-  InputGrid.prototype.setDateAsFirstTitle = function() {
-    return this.rows()[0].getFieldByName('title').value(new Date());
+  InputGrid.prototype.setTodayInFirstRow = function() {
+    return this.rows()[0].getFieldByName('date').value(new Date());
   };
 
   InputGrid.prototype.setAllCountriesAR = function() {
@@ -173,12 +173,22 @@ InputGrid = (function() {
   };
 
   InputGrid.prototype.newRowTemplate = function() {
-    var row;
+    var row,
+      _this = this;
     row = new Row(this.fieldsData, {});
     this.fields().forEach(function(field) {
       if (field.selectorData) {
         return row.getFieldByName(field.name()).selectorData = field.selectorData;
       }
+    });
+    row.fields().forEach(function(field) {
+      return field.valueChanged = field.value.subscribe(function() {
+        row.isNewRow = false;
+        row.fields().forEach(function(otherField) {
+          return otherField.valueChanged.dispose();
+        });
+        return _this.rows.notifySubscribers();
+      });
     });
     return row;
   };
@@ -198,7 +208,9 @@ InputGrid = (function() {
   };
 
   InputGrid.prototype.toggleInputHelper = function(row, col) {
-    return this.rows()[row].visibleFields()[col].callPopup(row);
+    this.rows()[row].visibleFields()[0].value('X');
+    this.rows()[row].visibleFields()[1].value('Y');
+    return this.rows()[row].visibleFields()[2].value('Z');
   };
 
   return InputGrid;
