@@ -1,3 +1,22 @@
 .handsontable .htDimmed {
 	background-color: #f4f5ff;
 }
+
+.handsontable .hasPopupGlass {
+	background-image: url(Content/search.png);
+	background-color: white;
+	position: absolute;
+	top: 5px;
+	right: 1px;
+	font-size: 10px;
+	color: #EEE;
+	cursor: default;
+	width: 12px;
+	text-align: center;
+	height: 14px;
+	cursor:pointer;
+}
+
+.handsontable td .hasPopupGlass:hover {
+  color: #777;
+}
