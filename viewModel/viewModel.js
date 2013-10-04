@@ -71,7 +71,7 @@ Selector = (function(_super) {
     return this.getSelectorPair('id', this.value()).description;
   };
 
-  Selector.prototype.setValue = function(description) {
+  Selector.prototype.setValueByDescription = function(description) {
     if (!description) {
       return this.value("");
     } else {

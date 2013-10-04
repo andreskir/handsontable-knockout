@@ -46,7 +46,7 @@ class SelectorToColumnAdapter extends FieldToColumnAdapter
 	getter1: (selector)->
 		selector.getDisplayValue()
 	setter1: (selector,val)->
-		selector.setValue val
+		selector.setValueByDescription val
 
 class MultiValueToColumnAdapter extends FieldToColumnAdapter
 	getColumnFor: (field)->

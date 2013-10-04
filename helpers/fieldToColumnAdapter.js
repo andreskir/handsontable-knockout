@@ -104,7 +104,7 @@ SelectorToColumnAdapter = (function(_super) {
   };
 
   SelectorToColumnAdapter.prototype.setter1 = function(selector, val) {
-    return selector.setValue(val);
+    return selector.setValueByDescription(val);
   };
 
   return SelectorToColumnAdapter;

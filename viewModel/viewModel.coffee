@@ -33,7 +33,7 @@ class Selector extends Field
     return "" if !@value()
     @getSelectorPair('id',@value()).description
 
-  setValue: (description)->
+  setValueByDescription: (description)->
     if !description
       @value ""
     else
