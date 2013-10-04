@@ -19,6 +19,10 @@ Field = (function() {
 
   Field.prototype.hasPopup = function() {};
 
+  Field.prototype.callPopup = function(row) {
+    return alert(row + ' - ' + this.name());
+  };
+
   return Field;
 
 })();
@@ -101,11 +105,17 @@ MultiValue = (function(_super) {
 
 Row = (function() {
   function Row(fieldsData, rowData) {
+    var _this = this;
     this.fields = ko.observableArray(fieldsData.map(function(field) {
       return new window[field._type](field, rowData[field.name]);
     }));
     this.isNewRow = true;
     this.allowRemove = true;
+    this.visibleFields = ko.computed(function() {
+      return _this.fields().filter(function(field) {
+        return field.visible();
+      });
+    });
   }
 
   Row.prototype.getFieldByName = function(name) {
@@ -124,6 +134,7 @@ Row = (function() {
 
 InputGrid = (function() {
   function InputGrid(fieldsData, data) {
+    this.toggleInputHelper = __bind(this.toggleInputHelper, this);
     this.newRowTemplate = __bind(this.newRowTemplate, this);
     var _this = this;
     this.fieldsData = fieldsData;
@@ -184,6 +195,10 @@ InputGrid = (function() {
     return this.fields().filter(function(field) {
       return field.name() === name;
     })[0];
+  };
+
+  InputGrid.prototype.toggleInputHelper = function(row, col) {
+    return this.rows()[row].visibleFields()[col].callPopup(row);
   };
 
   return InputGrid;

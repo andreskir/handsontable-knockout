@@ -3,7 +3,7 @@
 }
 
 .handsontable .hasPopupGlass {
-	background-image: url(Content/search.png);
+	background-image: url(search.png);
 	background-color: white;
 	position: absolute;
 	top: 5px;

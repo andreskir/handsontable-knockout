@@ -29,6 +29,7 @@ ko.bindingHandlers.handsontable = {
         if(this.getSourceAt)
           this.source = this.getSourceAt(options.data()[row]);
       },
+      toggleInputHelper: options.toggleInputHelper,
       width: 900
     });
   },

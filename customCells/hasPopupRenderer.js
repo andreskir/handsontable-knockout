@@ -9,16 +9,14 @@ clonableGLASS = document.createElement('DIV');
 clonableGLASS.className = 'hasPopupGlass';
 
 HasPopupRenderer = function(instance, TD, row, col, prop, value, cellProperties) {
-  var GLASS, TEXT,
+  var GLASS, GLASSListener, TEXT,
     _this = this;
   TEXT = clonableTEXT.cloneNode(false);
   GLASS = clonableGLASS.cloneNode(true);
-  if (!instance.acGLASSListener) {
-    instance.acGLASSListener = function() {
-      return instance.view.wt.getSetting('onCellDblClick');
-    };
-    instance.rootElement.on('mouseup', '.hasPopupGlass', instance.acGLASSListener);
-  }
+  GLASSListener = function() {
+    return instance.getSettings().toggleInputHelper(row, col);
+  };
+  $(GLASS).on('mouseup', GLASSListener);
   Handsontable.TextRenderer(instance, TEXT, row, col, prop, value, cellProperties);
   if (!TEXT.firstChild) {
     TEXT.appendChild(document.createTextNode('\u00A0'));

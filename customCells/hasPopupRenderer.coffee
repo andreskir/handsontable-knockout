@@ -8,10 +8,9 @@ HasPopupRenderer = (instance, TD, row, col, prop, value, cellProperties) ->
 	TEXT = clonableTEXT.cloneNode false
 	GLASS = clonableGLASS.cloneNode true
 
-	if !instance.acGLASSListener
-		instance.acGLASSListener = () =>
-			instance.view.wt.getSetting('onCellDblClick')
-		instance.rootElement.on('mouseup', '.hasPopupGlass', instance.acGLASSListener)
+	GLASSListener = () =>
+		instance.getSettings().toggleInputHelper(row,col)
+	$(GLASS).on('mouseup', GLASSListener)
 
 	Handsontable.TextRenderer(instance, TEXT, row, col, prop, value, cellProperties)
 

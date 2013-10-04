@@ -10,6 +10,9 @@ class Field
 
   hasPopup: ()->
 
+  callPopup: (row)->
+    alert(row+' - '+@name())
+
 class DatePicker extends Field
   adapt: (runner)->
     runner.adaptDatePicker @
@@ -49,6 +52,7 @@ class Row
       new window[field._type](field,rowData[field.name])
     @isNewRow = true
     @allowRemove = true
+    @visibleFields = ko.computed ()=>@fields().filter (field)->field.visible()
 
   getFieldByName: (name)->
     @fields().filter((field)->field.name()==name)[0]
@@ -90,4 +94,7 @@ class InputGrid
 
   getFieldByName: (name)->
     @fields().filter((field)->field.name()==name)[0]
+
+  toggleInputHelper: (row,col)=>
+    @rows()[row].visibleFields()[col].callPopup(row)
 
