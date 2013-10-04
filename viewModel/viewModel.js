@@ -104,12 +104,18 @@ Row = (function() {
     this.fields = ko.observableArray(fieldsData.map(function(field) {
       return new window[field._type](field, rowData[field.name]);
     }));
+    this.isNewRow = true;
+    this.allowRemove = true;
   }
 
   Row.prototype.getFieldByName = function(name) {
     return this.fields().filter(function(field) {
       return field.name() === name;
     })[0];
+  };
+
+  Row.prototype.isRemovable = function() {
+    return !this.isNewRow && this.allowRemove;
   };
 
   return Row;
@@ -158,7 +164,6 @@ InputGrid = (function() {
   InputGrid.prototype.newRowTemplate = function() {
     var row;
     row = new Row(this.fieldsData, {});
-    row.isNewRow = true;
     this.fields().forEach(function(field) {
       if (field.selectorData) {
         return row.getFieldByName(field.name()).selectorData = field.selectorData;

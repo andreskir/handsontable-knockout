@@ -10,7 +10,7 @@ ko.bindingHandlers.handsontable = {
       columns: options.columns,
       removeRowPlugin: true,
       removeRowFunction: function (row) { options.data.remove(options.data()[row]); },
-      isRemovable: function (row) { return options.isRemovable(); },
+      isRemovable: function (row) { return options.isRemovable(options.data()[row]); },
       colMaxWidth: 150,
       enterBeginsEditing: true,
       afterCreateRow: function () {
@@ -33,7 +33,7 @@ ko.bindingHandlers.handsontable = {
     });
   },
   update: function (element, valueAccessor) {
-    var value = valueAccessor();
+    var dummy = valueAccessor().data().length;
     $(element).handsontable("getInstance").render();
   }
 };

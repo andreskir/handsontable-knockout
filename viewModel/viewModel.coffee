@@ -47,9 +47,14 @@ class Row
   constructor:(fieldsData,rowData)->
     @fields = ko.observableArray fieldsData.map (field)->
       new window[field._type](field,rowData[field.name])
+    @isNewRow = true
+    @allowRemove = true
 
   getFieldByName: (name)->
     @fields().filter((field)->field.name()==name)[0]
+
+  isRemovable:->
+    !@isNewRow && @allowRemove
 
 class InputGrid
   constructor: (fieldsData,data)->
@@ -74,7 +79,6 @@ class InputGrid
 
   newRowTemplate: ()=>
     row = new Row(@fieldsData,{})
-    row.isNewRow = true
     @fields().forEach (field)->
       if(field.selectorData)
         row.getFieldByName(field.name()).selectorData = field.selectorData
