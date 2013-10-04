@@ -16,6 +16,13 @@ ko.bindingHandlers.handsontable = {
       afterCreateRow: function () {
         options.data.notifySubscribers();
       },
+      beforeRender: function(changes, source) {
+        var totalWidth = 50;
+        for(i=0;i<this.countCols();i++){ 
+          totalWidth+=this.getColWidth(i);
+        }
+        $(element).width(totalWidth);
+      },
       isEmptyRow: function(row){
         return options.data()[row].isNewRow;
       },
