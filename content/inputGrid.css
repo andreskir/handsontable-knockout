@@ -1,6 +1,10 @@
 .handsontable .htDimmed {
 	background-color: #f4f5ff;
 }
+.handsontable .hasPopup {
+	position: relative;
+	padding-right: 20px;
+}
 
 .handsontable .hasPopupGlass {
 	background-image: url(search.png);

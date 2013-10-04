@@ -31,7 +31,7 @@ ko.bindingHandlers.handsontable = {
     var options = valueAccessor();
     var dummy = options.data().length;
     var instance = $(element).handsontable("getInstance");
-    if(options.allowAdd && !instance.isEmptyRow(instance.countVisibleRows()-1))
+    if(options.allowAdd && !instance.isEmptyRow(instance.countRows()-1))
       instance.alter('insert_row',0,-1); //hack para que internamente ejecute adjustRowsAndCols y se de cuenta que tiene que agregar una fila
     instance.render();
   }
