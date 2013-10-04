@@ -4,6 +4,7 @@ class FieldToColumnAdapter
 			data: @valueAccessor(field.name())
 			type: "text"
 			title: field.text()
+			readOnly: field.isReadOnly()
 		if field.hasPopup() then column.renderer = HasPopupRenderer
 		column
 

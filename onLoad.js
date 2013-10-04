@@ -4,18 +4,18 @@ $(document).ready(function () {
   authors = [{id:null,description:''},{id:'CP',description:'Charles Perez'},{id:'NG',description:'Nick Gomez'},{id:'WW',description:'Walter White'},{id:'ER',description:'Edward Rodriguez'}];
   formats = [{id:null,description:''},{id:'LP',description:'Long Play'},{id:'C',description:'Cassette'},{id:'CD',description:'Compact Disk'},{id:'BR',description:'Blue Ray'},{id:'MP3',description:'MP3'}]
 
-  var fields = [{ name: 'title', text: "Plain text title", value: 'A', _type: "Field", visible: true },
-    { name: 'description', text: "HTML Description", hasPopup: function(){return true}, value: 'B', _type: "Field", visible: true },
-    { name: 'cover', text: "Cover", value: null, _type: "Field", visible: true },
-    { name: 'date', text: "Date", value: null, _type: "DatePicker", visible: true },
-    { name: 'dummy1', value: null, _type: "Field", visible: false },
-    { name: 'format', text: "Format", value: null, _type: "Selector", selectorData: [], visible: true },
-    { name: 'dummy2', value: null, _type: "Field", visible: false },
-    { name: 'country', text: "Country", value: 'AR', _type: "Selector", selectorData: [], visible: true },
-    { name: 'dummy3', value: null, _type: "Field", visible: false },
-    { name: 'authors', text: "Authors", value: ["WW"], _type: "MultiValue", selectorData: [], visible: true },
-    { name: 'dummy4', value: null, _type: "Field", visible: false },
-    { name: 'notes', text: "Notes", value: null, _type: "Field", visible: true },
+  var fields = [{ name: 'title', text: "Plain text title", value: 'A', _type: "Field", visible: true, isReadOnly: false },
+    { name: 'description', text: "HTML Description", hasPopup: function(){return true}, value: 'B', _type: "Field", visible: true, isReadOnly: false },
+    { name: 'cover', text: "Cover", value: null, _type: "Field", visible: true, isReadOnly: false },
+    { name: 'date', text: "Date", value: null, _type: "DatePicker", visible: true, isReadOnly: false },
+    { name: 'dummy1', value: null, _type: "Field", visible: false, isReadOnly: false },
+    { name: 'format', text: "Format", value: null, _type: "Selector", selectorData: [], visible: true, isReadOnly: false },
+    { name: 'dummy2', value: null, _type: "Field", visible: false, isReadOnly: false },
+    { name: 'country', text: "Country", value: 'AR', _type: "Selector", selectorData: [], visible: true, isReadOnly: false },
+    { name: 'dummy3', value: null, _type: "Field", visible: false, isReadOnly: false },
+    { name: 'authors', text: "Authors", value: ["WW"], _type: "MultiValue", selectorData: [], visible: true, isReadOnly: false },
+    { name: 'dummy4', value: null, _type: "Field", visible: false, isReadOnly: false },
+    { name: 'notes', text: "Notes", value: null, _type: "Field", visible: true, isReadOnly: true },
   ];
 
 

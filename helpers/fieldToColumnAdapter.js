@@ -10,7 +10,8 @@ FieldToColumnAdapter = (function() {
     column = {
       data: this.valueAccessor(field.name()),
       type: "text",
-      title: field.text()
+      title: field.text(),
+      readOnly: field.isReadOnly()
     };
     if (field.hasPopup()) {
       column.renderer = HasPopupRenderer;
