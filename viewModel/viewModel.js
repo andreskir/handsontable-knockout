@@ -1,4 +1,4 @@
-var DatePicker, Field, InputGrid, MultiValue, Row, Selector, _ref, _ref1,
+var DatePicker, Field, InputGrid, InputGridRow, MultiValue, Selector, _ref, _ref1,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -103,8 +103,8 @@ MultiValue = (function(_super) {
 
 })(Selector);
 
-Row = (function() {
-  function Row(fieldsData, rowData) {
+InputGridRow = (function() {
+  function InputGridRow(fieldsData, rowData) {
     var _this = this;
     this.fields = ko.observableArray(fieldsData.map(function(field) {
       return new window[field._type](field, rowData[field.name]);
@@ -118,17 +118,17 @@ Row = (function() {
     });
   }
 
-  Row.prototype.getFieldByName = function(name) {
+  InputGridRow.prototype.getFieldByName = function(name) {
     return this.fields().filter(function(field) {
       return field.name() === name;
     })[0];
   };
 
-  Row.prototype.isRemovable = function() {
+  InputGridRow.prototype.isRemovable = function() {
     return !this.isNewRow && this.allowRemove;
   };
 
-  return Row;
+  return InputGridRow;
 
 })();
 
@@ -142,7 +142,7 @@ InputGrid = (function() {
       return new window[field._type](field);
     }));
     this.rows = ko.observableArray(data.map(function(row) {
-      return new Row(fieldsData, row);
+      return new InputGridRow(fieldsData, row);
     }));
     this.visibleFields = ko.computed(function() {
       return _this.fields().filter(function(field) {
@@ -175,7 +175,7 @@ InputGrid = (function() {
   InputGrid.prototype.newRowTemplate = function() {
     var row,
       _this = this;
-    row = new Row(this.fieldsData, {});
+    row = new InputGridRow(this.fieldsData, {});
     this.fields().forEach(function(field) {
       if (field.selectorData) {
         return row.getFieldByName(field.name()).selectorData = field.selectorData;

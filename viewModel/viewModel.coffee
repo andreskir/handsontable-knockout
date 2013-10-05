@@ -46,7 +46,7 @@ class MultiValue extends Selector
   adapt: (runner)->
     runner.adaptMultiValue @
 
-class Row
+class InputGridRow
   constructor:(fieldsData,rowData)->
     @fields = ko.observableArray fieldsData.map (field)->
       new window[field._type](field,rowData[field.name])
@@ -66,7 +66,7 @@ class InputGrid
     @fields = ko.observableArray fieldsData.map (field)->
       new window[field._type](field)
     @rows = ko.observableArray data.map (row)->
-      new Row(fieldsData,row)
+      new InputGridRow(fieldsData,row)
     @visibleFields = ko.computed ()=>@fields().filter (field)->field.visible()
 
   setTodayInFirstRow: ()->
@@ -82,7 +82,7 @@ class InputGrid
     @rows.remove @rows()[index]
 
   newRowTemplate: ()=>
-    row = new Row(@fieldsData,{})
+    row = new InputGridRow(@fieldsData,{})
     @fields().forEach (field)->
       if(field.selectorData)
         row.getFieldByName(field.name()).selectorData = field.selectorData
