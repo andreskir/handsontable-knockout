@@ -1,0 +1,32 @@
+{
+  "name": "handsontable-knockout",
+  "version": "0.0.0",
+  "description": "handsontable-knockoutjs",
+  "main": "onLoad.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/andreskir/handsontable-knockout-select2.git"
+  },
+  "author": "Parsimotion",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/andreskir/handsontable-knockout-select2/issues"
+  },
+  "devDependencies": {
+    "qunitjs": "~1.12.0",
+    "karma-script-launcher": "~0.1.0",
+    "karma-firefox-launcher": "~0.1.0",
+    "karma-chrome-launcher": "~0.1.0",
+    "karma-html2js-preprocessor": "~0.1.0",
+    "karma-jasmine": "~0.1.3",
+    "karma-requirejs": "~0.1.0",
+    "karma-coffee-preprocessor": "~0.1.0",
+    "karma-phantomjs-launcher": "~0.1.0",
+    "karma": "~0.10.2",
+    "karma-qunit": "~0.1.1",
+    "karma-growl-reporter": "~0.1.1"
+  }
+}
