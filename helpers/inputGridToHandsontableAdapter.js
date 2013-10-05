@@ -12,6 +12,9 @@ InputGridToHandsontableAdapter = (function() {
       isRemovable: function(row) {
         return row.isRemovable();
       },
+      isNewRow: function(row) {
+        return row.isNewRow;
+      },
       toggleInputHelper: inputGrid.toggleInputHelper
     };
   };

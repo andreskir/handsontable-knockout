@@ -5,4 +5,5 @@ class InputGridToHandsontableAdapter
 		allowAdd: true
 		dataSchema: inputGrid.newRowTemplate
 		isRemovable: (row)->row.isRemovable()
+		isNewRow: (row)->row.isNewRow
 		toggleInputHelper: inputGrid.toggleInputHelper

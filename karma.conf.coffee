@@ -27,9 +27,6 @@ module.exports = (config) ->
 		# Sources
 		frameworks: ['qunit']
 		files: filesThatMustBeLoadedFirst.concat allFiles
-		exclude: [
-			"#{sourcesBasePath}Helpers/onLoad.js",
-		]
 		
 		# Runner
 		reporters: ['progress', 'growl']
@@ -40,3 +37,4 @@ module.exports = (config) ->
 		
 		# Output
 		logLevel: config.LOG_INFO
+

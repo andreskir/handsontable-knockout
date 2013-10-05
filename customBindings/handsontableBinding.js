@@ -33,7 +33,7 @@ ko.bindingHandlers.handsontable = {
         return $(element).width(totalWidth);
       },
       isEmptyRow: function(row) {
-        return options.data()[row].isNewRow;
+        return options.isNewRow(options.data()[row]);
       },
       cells: function(row, col, prop) {
         if (this.getSourceAt) {

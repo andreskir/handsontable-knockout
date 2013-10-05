@@ -28,7 +28,7 @@ ko.bindingHandlers.handsontable =
         $(element).width totalWidth
 
       isEmptyRow: (row) ->
-        options.data()[row].isNewRow
+        options.isNewRow options.data()[row]
 
       cells: (row, col, prop) ->
         @source = @getSourceAt(options.data()[row])  if @getSourceAt
