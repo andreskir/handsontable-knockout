@@ -1,49 +1,63 @@
-ko.bindingHandlers.handsontable = {
-  init: function (element, valueAccessor) {
-    var options = valueAccessor();
+var getColumnsTitles;
 
-    $(element).handsontable({
+ko.bindingHandlers.handsontable = {
+  init: function(element, valueAccessor) {
+    var options;
+    options = valueAccessor();
+    return $(element).handsontable({
       data: options.data(),
-      minSpareRows: options.allowAdd ? 1 : 0,
+      minSpareRows: (options.allowAdd ? 1 : 0),
       dataSchema: options.dataSchema,
       colHeaders: getColumnsTitles(options.columns),
       columns: options.columns,
       removeRowPlugin: true,
-      removeRowFunction: function (row) { options.data.remove(options.data()[row]); },
-      isRemovable: function (row) { return options.isRemovable(options.data()[row]); },
+      removeRowFunction: function(row) {
+        return options.data.remove(options.data()[row]);
+      },
+      isRemovable: function(row) {
+        return options.isRemovable(options.data()[row]);
+      },
       colMaxWidth: 150,
       enterBeginsEditing: true,
-      afterCreateRow: function () {
-        options.data.notifySubscribers();
+      afterCreateRow: function() {
+        return options.data.notifySubscribers();
       },
       beforeRender: function(changes, source) {
-        var totalWidth = 50;
-        for(i=0;i<this.countCols();i++){ 
-          totalWidth+=this.getColWidth(i);
+        var i, totalWidth;
+        totalWidth = 50;
+        i = 0;
+        while (i < this.countCols()) {
+          totalWidth += this.getColWidth(i);
+          i++;
         }
-        $(element).width(totalWidth);
+        return $(element).width(totalWidth);
       },
-      isEmptyRow: function(row){
+      isEmptyRow: function(row) {
         return options.data()[row].isNewRow;
       },
-      cells: function(row,col,prop){
-        if(this.getSourceAt)
-          this.source = this.getSourceAt(options.data()[row]);
+      cells: function(row, col, prop) {
+        if (this.getSourceAt) {
+          return this.source = this.getSourceAt(options.data()[row]);
+        }
       },
       toggleInputHelper: options.toggleInputHelper,
       width: 900
     });
   },
-  update: function (element, valueAccessor) {
-    var options = valueAccessor();
-    var dummy = options.data().length;
-    var instance = $(element).handsontable("getInstance");
-    if(options.allowAdd && !instance.isEmptyRow(instance.countRows()-1))
-      instance.alter('insert_row',0,-1); //hack para que internamente ejecute adjustRowsAndCols y se de cuenta que tiene que agregar una fila
-    instance.render();
+  update: function(element, valueAccessor) {
+    var dummy, instance, options;
+    options = valueAccessor();
+    dummy = options.data().length;
+    instance = $(element).handsontable("getInstance");
+    if (options.allowAdd && !instance.isEmptyRow(instance.countRows() - 1)) {
+      instance.alter("insert_row", 0, -1);
+    }
+    return instance.render();
   }
 };
 
-var getColumnsTitles = function (columns) {
-  return columns.map(function (col) { return col.title; });
-}
+getColumnsTitles = function(columns) {
+  return columns.map(function(col) {
+    return col.title;
+  });
+};

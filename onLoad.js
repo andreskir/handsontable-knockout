@@ -11,7 +11,7 @@ $(document).ready(function () {
     { name: 'dummy1', value: null, _type: "Field", visible: false, isReadOnly: false },
     { name: 'format', text: "Format", value: null, _type: "Selector", selectorData: [], visible: true, isReadOnly: false },
     { name: 'dummy2', value: null, _type: "Field", visible: false, isReadOnly: false },
-    { name: 'country', text: "Country", value: 'AR', _type: "Selector", selectorData: [], visible: true, isReadOnly: false },
+    { name: 'country', text: "Country", value: 'BR', _type: "Selector", selectorData: [], visible: true, isReadOnly: false },
     { name: 'dummy3', value: null, _type: "Field", visible: false, isReadOnly: false },
     { name: 'authors', text: "Authors", value: ["WW"], _type: "MultiValue", selectorData: [], visible: true, isReadOnly: false },
     { name: 'dummy4', value: null, _type: "Field", visible: false, isReadOnly: false },
