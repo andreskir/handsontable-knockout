@@ -1,27 +1,27 @@
 <html>
 	<head>
-		<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.2.js"></script>
+		<script type="text/javascript" src="lib/jquery-2.0.2.js"></script>
 		<script type="text/javascript" src="lib/select2.js"></script>
+		<script type="text/javascript" src="lib/jquery.handsontable.full.js"></script>
+	    <script type="text/javascript" src="lib/knockout-2.2.0.js"></script>
+	    <script type="text/javascript" src="lib/knockout.mapping-2.3.5.js"></script>
+		<script type="text/javascript" src="lib/jquery-ui.custom.min.js"></script>
+	    <script type="text/javascript" src="customCells/multiValueRenderer.js"></script>
+	    <script type="text/javascript" src="customCells/hasPopupRenderer.js"></script>
+	    <script type="text/javascript" src="customBindings/handsontableBinding.js"></script>
+	    <script type="text/javascript" src="extensions/removeRow.js"></script>
+	    <script type="text/javascript" src="extensions/colMaxWidth.js"></script>
+	    <script type="text/javascript" src="viewModel/viewModel.js"></script>
+	    <script type="text/javascript" src="helpers/fieldToColumnAdapter.js"></script>
+	    <script type="text/javascript" src="helpers/inputGridToHandsontableAdapter.js"></script>
+	    <script type="text/javascript" src="onLoad.js"></script>
 		<link rel="stylesheet" media="screen" href="http://ivaynberg.github.io/select2/select2-3.4.3/select2.css">
-		<script src="http://handsontable.com/dist/jquery.handsontable.full.js"></script>
-    <script src="http://knockoutjs.com/downloads/knockout-2.2.0.js"></script>
-    <script src="lib/knockout.mapping-2.3.5.js"></script>
 		<link rel="stylesheet" media="screen" href="http://handsontable.com/dist/jquery.handsontable.full.css">
-		<script src="http://handsontable.com/lib/jquery-ui/js/jquery-ui.custom.min.js"></script>
 		<link rel="stylesheet" media="screen" href="http://handsontable.com/lib/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css">
 		<link rel="stylesheet" media="screen" href="http://handsontable.com/demo/css/samples.css">
-    <script src="customCells/multiValueRenderer.js"></script>
-    <script src="customCells/hasPopupRenderer.js"></script>
-    <script src="customBindings/handsontableBinding.js"></script>
-    <script src="extensions/removeRow.js"></script>
-    <script src="extensions/colMaxWidth.js"></script>
-    <script src="viewModel/viewModel.js"></script>
-    <script src="helpers/fieldToColumnAdapter.js"></script>
-    <script src="helpers/inputGridToHandsontableAdapter.js"></script>
-    <link rel="stylesheet" media="screen" href="extensions/removeRow.css">
-    <link rel="stylesheet" media="screen" href="content/handsontable.css">
-    <link rel="stylesheet" media="screen" href="content/inputGrid.css">
-    <script src="onLoad.js"></script>
+	    <link rel="stylesheet" media="screen" href="extensions/removeRow.css">
+	    <link rel="stylesheet" media="screen" href="content/handsontable.css">
+	    <link rel="stylesheet" media="screen" href="content/inputGrid.css">
 		<style type="text/css">
 			body {background: white; margin: 20px;}
 			h2 {margin: 20px 0;}
@@ -35,19 +35,19 @@
 
 		<p>This is a very powerful feature. Just remember to escape any HTML code that could be used for XSS
 		  attacks.</p>
-	<div data-bind="text: rows().length"></div>
-	<div id="example1" class="handsontable" style="overflow: scroll" data-bind="handsontable: new InputGridToHandsontableAdapter().adapt($data)"></div>
-    <input type="button" value="Set Date As First Title" data-bind="click: setTodayInFirstRow">
-    <input type="button" value="La Argentinidad al palo" data-bind="click: setAllCountriesAR">
-    <div>
-	    <!-- ko foreach: rows -->
-	    	<div style="display: block">
-	    	<!-- ko foreach: fields -->
-	    		<div data-bind="text: value" style="display: inline"></div>
-	    	<!-- /ko -->
-	    	</div>
-	    <!-- /ko -->
-    </div>
-    <!--<pre id="dump" data-bind="text: ko.toJSON(rows, null, 2)"/>-->
+		<div data-bind="text: rows().length"></div>
+		<div id="example1" class="handsontable" style="overflow: scroll" data-bind="handsontable: new InputGridToHandsontableAdapter().adapt($data)"></div>
+	    <input type="button" value="Set Date As First Title" data-bind="click: setTodayInFirstRow">
+	    <input type="button" value="La Argentinidad al palo" data-bind="click: setAllCountriesAR">
+	    <div>
+		    <!-- ko foreach: rows -->
+		    	<div style="display: block">
+		    	<!-- ko foreach: fields -->
+		    		<div data-bind="text: value" style="display: inline"></div>
+		    	<!-- /ko -->
+		    	</div>
+		    <!-- /ko -->
+	    </div>
+	    <!--<pre id="dump" data-bind="text: ko.toJSON(rows, null, 2)"/>-->
 	</body>
 </html>
