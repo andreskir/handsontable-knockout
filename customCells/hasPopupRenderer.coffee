@@ -19,4 +19,5 @@ HasPopupRenderer = (instance, TD, row, col, prop, value, cellProperties) ->
 	
 	TEXT.appendChild GLASS
 	instance.view.wt.wtDom.empty TD
+	$(TD).css 'padding','0'
 	TD.appendChild TEXT

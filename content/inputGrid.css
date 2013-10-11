@@ -3,15 +3,24 @@
 }
 .handsontable .hasPopup {
 	position: relative;
-	padding-right: 20px;
+	padding: 0px 20px 0px 4px;
+	height: 100%;
+	width: 100%;
+	box-sizing: border-box;
 }
-
+.handsontable .htAutocomplete {
+	position: relative;
+	padding: 0px 20px 0px 4px;
+	height: 100%;
+	width: 100%;
+	box-sizing: border-box;
+}
 .handsontable .hasPopupGlass {
 	background-image: url(search.png);
 	background-color: white;
 	position: absolute;
 	top: 5px;
-	right: 1px;
+	right: 4px;
 	font-size: 10px;
 	color: #EEE;
 	cursor: default;
@@ -23,4 +32,10 @@
 
 .handsontable td .hasPopupGlass:hover {
   color: #777;
+}
+
+.handsontable .htInvalid {
+	-webkit-transition: background 0.25s ease !important;
+	transition: background 0.25s ease !important;
+	background-color: #FFA3A3 !important;
 }
