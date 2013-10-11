@@ -36,7 +36,7 @@
 		<p>This is a very powerful feature. Just remember to escape any HTML code that could be used for XSS
 		  attacks.</p>
 		<div data-bind="text: rows().length"></div>
-		<div id="example1" class="handsontable" style="overflow: scroll" data-bind="handsontable: new InputGridToHandsontableAdapter().adapt($data)"></div>
+		<div id="example1" class="handsontable" style="overflow: scroll" data-bind="handsontable: new InputGridToHandsontableAdapter($data).adapt()"></div>
 	    <input type="button" value="Set Date As First Title" data-bind="click: setTodayInFirstRow">
 	    <input type="button" value="La Argentinidad al palo" data-bind="click: setAllCountriesAR">
 	    <div>

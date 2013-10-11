@@ -1,9 +1,18 @@
 class InputGridToHandsontableAdapter
-	adapt: (inputGrid)->
-		data: inputGrid.rows
-		columns: FieldsToColumnsMapper.map(inputGrid.visibleFields())
+	constructor: (inputGrid)->
+		@inputGrid = inputGrid
+
+	adapt: ->
+		data: @inputGrid.rows
+		columns: new FieldsToColumnsMapper(@beforeSet,@afterSet).map(@inputGrid.visibleFields())
 		allowAdd: true
-		dataSchema: inputGrid.newRowTemplate
+		dataSchema: @inputGrid.newRowTemplate
 		isRemovable: (row)->row.isRemovable()
 		isNewRow: (row)->row.isNewRow
-		toggleInputHelper: inputGrid.toggleInputHelper
+		toggleInputHelper: @inputGrid.toggleInputHelper
+		isSetting: => @isSetting
+
+	beforeSet: =>
+		@inputGrid.handsontableIsSettingValue = true
+	afterSet: =>
+		@inputGrid.handsontableIsSettingValue = false
