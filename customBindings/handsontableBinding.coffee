@@ -37,12 +37,13 @@ ko.bindingHandlers.handsontable =
       width: 900
 
 
-  update: (element, valueAccessor) ->
+  update: (element, valueAccessor, allbinding, viewModel) ->
     options = valueAccessor()
     dummy = options.data().length
-    instance = $(element).handsontable("getInstance")
-    instance.alter "insert_row", 0, -1  if options.allowAdd and not instance.isEmptyRow(instance.countRows() - 1) #hack para que internamente ejecute adjustRowsAndCols y se de cuenta que tiene que agregar una fila
-    instance.render()
+    if not viewModel.handsontableIsSettingValue
+      instance = $(element).handsontable("getInstance")
+      instance.alter "insert_row", 0, -1  if options.allowAdd and not instance.isEmptyRow(instance.countRows() - 1) #hack para que internamente ejecute adjustRowsAndCols y se de cuenta que tiene que agregar una fila
+      instance.render()
 
 getColumnsTitles = (columns) ->
   columns.map (col) ->

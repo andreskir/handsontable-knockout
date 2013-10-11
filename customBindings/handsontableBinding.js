@@ -44,15 +44,17 @@ ko.bindingHandlers.handsontable = {
       width: 900
     });
   },
-  update: function(element, valueAccessor) {
+  update: function(element, valueAccessor, allbinding, viewModel) {
     var dummy, instance, options;
     options = valueAccessor();
     dummy = options.data().length;
-    instance = $(element).handsontable("getInstance");
-    if (options.allowAdd && !instance.isEmptyRow(instance.countRows() - 1)) {
-      instance.alter("insert_row", 0, -1);
+    if (!viewModel.handsontableIsSettingValue) {
+      instance = $(element).handsontable("getInstance");
+      if (options.allowAdd && !instance.isEmptyRow(instance.countRows() - 1)) {
+        instance.alter("insert_row", 0, -1);
+      }
+      return instance.render();
     }
-    return instance.render();
   }
 };
 
