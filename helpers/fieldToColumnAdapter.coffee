@@ -1,10 +1,23 @@
 class FieldToColumnAdapter
+	constructor: (beforeSet,afterSet)->
+		@beforeSet = beforeSet
+		@afterSet = afterSet
+
 	getColumnFor: (field)->
+		validateRequired = (field,value)->
+			!field.required || field.required?() && !!value
+		validateValue = (field,value)->
+			method = if field.type()=="integer" then "digits" else field.type()
+			isValid(method,value)
+
 		column =
 			data: @valueAccessor(field.name())
 			type: "text"
 			title: field.text()
 			readOnly: field.isReadOnly()
+			validator: (value,callback)->
+				callback (validateRequired(field,value) && validateValue(field,value))
+			allowInvalid: true
 		if field.hasPopup() then column.renderer = HasPopupRenderer
 		column
 
@@ -13,7 +26,9 @@ class FieldToColumnAdapter
 			if typeof val == 'undefined'
 				return "" if row.isNewRow
 				return @getter row.getFieldByName(fieldName)
+			@beforeSet()
 			@setter row.getFieldByName(fieldName),val
+			@afterSet()
 
 	getter: (field)->
 		field.value()
@@ -35,17 +50,9 @@ class SelectorToColumnAdapter extends FieldToColumnAdapter
 		column.strict = true
 		return column
 
-	#es muy loco pero si heredo el valueAccessor del super y sobrescribo el getter y el setter anda mal y no tira ningún error.
-	valueAccessor: (fieldName)->
-		(row,val)=>
-			if typeof val == 'undefined'
-				return "" if row.isNewRow
-				return @getter1 row.getFieldByName(fieldName)
-			@setter1 row.getFieldByName(fieldName),val
-
-	getter1: (selector)->
+	getter: (selector)->
 		selector.getDisplayValue()
-	setter1: (selector,val)->
+	setter: (selector,val)->
 		selector.setValueByDescription val
 
 class MultiValueToColumnAdapter extends FieldToColumnAdapter
@@ -59,19 +66,37 @@ class MultiValueToColumnAdapter extends FieldToColumnAdapter
 		return column
 
 class FieldToColumnAdapterRunner
+	constructor: (beforeSet,afterSet)->
+		@beforeSet = beforeSet
+		@afterSet = afterSet
+
 	adaptField: (field)->
-		new FieldToColumnAdapter().getColumnFor field
+		new FieldToColumnAdapter(@beforeSet,@afterSet).getColumnFor field
 
 	adaptDatePicker: (datePicker)->
-		new DatePickerToColumnAdapter().getColumnFor datePicker
+		new DatePickerToColumnAdapter(@beforeSet,@afterSet).getColumnFor datePicker
 
 	adaptSelector: (selector)->
-		new SelectorToColumnAdapter().getColumnFor selector
+		new SelectorToColumnAdapter(@beforeSet,@afterSet).getColumnFor selector
 
 	adaptMultiValue: (multiValue)->
-		new MultiValueToColumnAdapter().getColumnFor multiValue
+		new MultiValueToColumnAdapter(@beforeSet,@afterSet).getColumnFor multiValue
 
 class FieldsToColumnsMapper
-	@map: (fields)->
-		fields.map (field)->
-			field.adapt new FieldToColumnAdapterRunner()
+	constructor: (beforeSet,afterSet)->
+		@beforeSet = beforeSet
+		@afterSet = afterSet
+
+	map: (fields)->
+		fields.map (field)=>
+			field.adapt new FieldToColumnAdapterRunner(@beforeSet,@afterSet)
+
+isValid = (methodName,value)->
+	method = $.validator.methods[methodName]
+	if method && value
+		v = $("<form>").validate()
+		element = $("<input>")[0]
+		element.value = value		
+		return method.call v, value, element
+	true
+
