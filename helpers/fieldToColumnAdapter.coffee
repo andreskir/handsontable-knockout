@@ -12,7 +12,7 @@ class FieldToColumnAdapter
 
 		column =
 			data: @valueAccessor(field.name())
-			type: "text"
+			type: if field.type()=="boolean" then "checkbox" else "text"
 			title: field.text()
 			readOnly: field.isReadOnly()
 			validator: (value,callback)->
@@ -24,7 +24,7 @@ class FieldToColumnAdapter
 	valueAccessor: (fieldName)->
 		(row,val)=>
 			if typeof val == 'undefined'
-				return "" if row.isNewRow
+				return @emptyDisplayValue() if row.isNewRow
 				return @getter row.getFieldByName(fieldName)
 			@beforeSet()
 			@setter row.getFieldByName(fieldName),val
@@ -34,16 +34,28 @@ class FieldToColumnAdapter
 		field.value()
 	setter: (field,val)->
 		field.value val
+	emptyDisplayValue:()->
+		""
 
 class DatePickerToColumnAdapter extends FieldToColumnAdapter
 	getColumnFor: (field)->
 		column = super field
+		column.renderer = myAutocompleteRenderer
 		column.type = "date"
 		return column
+
+class CheckBoxToColumnAdapter extends FieldToColumnAdapter
+	getColumnFor: (field)->
+		column = super field
+		column.type = "checkbox"
+		return column
+	emptyDisplayValue:()->
+		return false
 
 class SelectorToColumnAdapter extends FieldToColumnAdapter
 	getColumnFor: (field)->
 		column = super field
+		column.renderer = myAutocompleteRenderer		
 		column.type = "autocomplete"
 		column.getSourceAt = (row)->
 			row.getFieldByName(field.name()).selectorPairs().filter((item)->item.id).map (item)->item.description
@@ -82,6 +94,9 @@ class FieldToColumnAdapterRunner
 	adaptMultiValue: (multiValue)->
 		new MultiValueToColumnAdapter(@beforeSet,@afterSet).getColumnFor multiValue
 
+	adaptCheckBox: (checkbox)->
+		new CheckBoxToColumnAdapter(@beforeSet,@afterSet).getColumnFor checkbox
+
 class FieldsToColumnsMapper
 	constructor: (beforeSet,afterSet)->
 		@beforeSet = beforeSet
@@ -99,4 +114,3 @@ isValid = (methodName,value)->
 		element.value = value		
 		return method.call v, value, element
 	true
-

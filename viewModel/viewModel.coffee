@@ -46,6 +46,10 @@ class MultiValue extends Selector
   adapt: (runner)->
     runner.adaptMultiValue @
 
+class CheckBox extends Field
+  adapt: (runner)->
+    runner.adaptCheckBox @
+
 class InputGridRow
   constructor:(fieldsData,rowData)->
     @fields = ko.observableArray fieldsData.map (field)->

@@ -16,6 +16,7 @@ $(document).ready(function () {
     { name: 'authors', text: "Authors",type: "string",  value: ["WW"], _type: "MultiValue", selectorData: [], visible: true, isReadOnly: false },
     { name: 'dummy4', type: "string", value: null, _type: "Field", visible: false, isReadOnly: false },
     { name: 'notes', type: "string", text: "Notes", value: null, _type: "Field", visible: true, isReadOnly: true },
+    { name: 'released', type: "boolean", text: "Released", value: null, _type: "CheckBox", visible: true, isReadOnly: false }
   ];
 
   inputGrid = new InputGrid(fields, []);

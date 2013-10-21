@@ -1,4 +1,4 @@
-var DatePicker, Field, InputGrid, InputGridRow, MultiValue, Selector, _ref, _ref1,
+var CheckBox, DatePicker, Field, InputGrid, InputGridRow, MultiValue, Selector, _ref, _ref1, _ref2,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -102,6 +102,22 @@ MultiValue = (function(_super) {
   return MultiValue;
 
 })(Selector);
+
+CheckBox = (function(_super) {
+  __extends(CheckBox, _super);
+
+  function CheckBox() {
+    _ref2 = CheckBox.__super__.constructor.apply(this, arguments);
+    return _ref2;
+  }
+
+  CheckBox.prototype.adapt = function(runner) {
+    return runner.adaptCheckBox(this);
+  };
+
+  return CheckBox;
+
+})(Field);
 
 InputGridRow = (function() {
   function InputGridRow(fieldsData, rowData) {

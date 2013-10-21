@@ -1,4 +1,4 @@
-var DatePickerToColumnAdapter, FieldToColumnAdapter, FieldToColumnAdapterRunner, FieldsToColumnsMapper, MultiValueToColumnAdapter, SelectorToColumnAdapter, isValid, _ref, _ref1, _ref2,
+var CheckBoxToColumnAdapter, DatePickerToColumnAdapter, FieldToColumnAdapter, FieldToColumnAdapterRunner, FieldsToColumnsMapper, MultiValueToColumnAdapter, SelectorToColumnAdapter, isValid, _ref, _ref1, _ref2, _ref3,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -20,7 +20,7 @@ FieldToColumnAdapter = (function() {
     };
     column = {
       data: this.valueAccessor(field.name()),
-      type: "text",
+      type: field.type() === "boolean" ? "checkbox" : "text",
       title: field.text(),
       readOnly: field.isReadOnly(),
       validator: function(value, callback) {
@@ -39,7 +39,7 @@ FieldToColumnAdapter = (function() {
     return function(row, val) {
       if (typeof val === 'undefined') {
         if (row.isNewRow) {
-          return "";
+          return _this.emptyDisplayValue();
         }
         return _this.getter(row.getFieldByName(fieldName));
       }
@@ -57,6 +57,10 @@ FieldToColumnAdapter = (function() {
     return field.value(val);
   };
 
+  FieldToColumnAdapter.prototype.emptyDisplayValue = function() {
+    return "";
+  };
+
   return FieldToColumnAdapter;
 
 })();
@@ -72,6 +76,7 @@ DatePickerToColumnAdapter = (function(_super) {
   DatePickerToColumnAdapter.prototype.getColumnFor = function(field) {
     var column;
     column = DatePickerToColumnAdapter.__super__.getColumnFor.call(this, field);
+    column.renderer = myAutocompleteRenderer;
     column.type = "date";
     return column;
   };
@@ -80,17 +85,41 @@ DatePickerToColumnAdapter = (function(_super) {
 
 })(FieldToColumnAdapter);
 
+CheckBoxToColumnAdapter = (function(_super) {
+  __extends(CheckBoxToColumnAdapter, _super);
+
+  function CheckBoxToColumnAdapter() {
+    _ref1 = CheckBoxToColumnAdapter.__super__.constructor.apply(this, arguments);
+    return _ref1;
+  }
+
+  CheckBoxToColumnAdapter.prototype.getColumnFor = function(field) {
+    var column;
+    column = CheckBoxToColumnAdapter.__super__.getColumnFor.call(this, field);
+    column.type = "checkbox";
+    return column;
+  };
+
+  CheckBoxToColumnAdapter.prototype.emptyDisplayValue = function() {
+    return false;
+  };
+
+  return CheckBoxToColumnAdapter;
+
+})(FieldToColumnAdapter);
+
 SelectorToColumnAdapter = (function(_super) {
   __extends(SelectorToColumnAdapter, _super);
 
   function SelectorToColumnAdapter() {
-    _ref1 = SelectorToColumnAdapter.__super__.constructor.apply(this, arguments);
-    return _ref1;
+    _ref2 = SelectorToColumnAdapter.__super__.constructor.apply(this, arguments);
+    return _ref2;
   }
 
   SelectorToColumnAdapter.prototype.getColumnFor = function(field) {
     var column;
     column = SelectorToColumnAdapter.__super__.getColumnFor.call(this, field);
+    column.renderer = myAutocompleteRenderer;
     column.type = "autocomplete";
     column.getSourceAt = function(row) {
       return row.getFieldByName(field.name()).selectorPairs().filter(function(item) {
@@ -119,8 +148,8 @@ MultiValueToColumnAdapter = (function(_super) {
   __extends(MultiValueToColumnAdapter, _super);
 
   function MultiValueToColumnAdapter() {
-    _ref2 = MultiValueToColumnAdapter.__super__.constructor.apply(this, arguments);
-    return _ref2;
+    _ref3 = MultiValueToColumnAdapter.__super__.constructor.apply(this, arguments);
+    return _ref3;
   }
 
   MultiValueToColumnAdapter.prototype.getColumnFor = function(field) {
@@ -163,6 +192,10 @@ FieldToColumnAdapterRunner = (function() {
 
   FieldToColumnAdapterRunner.prototype.adaptMultiValue = function(multiValue) {
     return new MultiValueToColumnAdapter(this.beforeSet, this.afterSet).getColumnFor(multiValue);
+  };
+
+  FieldToColumnAdapterRunner.prototype.adaptCheckBox = function(checkbox) {
+    return new CheckBoxToColumnAdapter(this.beforeSet, this.afterSet).getColumnFor(checkbox);
   };
 
   return FieldToColumnAdapterRunner;
